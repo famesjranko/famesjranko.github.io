@@ -264,7 +264,7 @@
             <h2>7. Data Retention and Deletion</h2>
 
             <h3>Local Data</h3>
-            <p>Event history (detection events, activity logs) is stored on your device. You can configure the retention period in Settings, from 1 to 365 days. Older events are automatically deleted.</p>
+            <p>Event history (detection events, activity logs) is stored on your device. This data remains on your device until you uninstall the app or clear app data.</p>
 
             <h3>Crash Reports</h3>
             <p>If crash reporting is enabled, Google retains crash data according to their data retention policies. You can view Google's retention practices in their <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy documentation</a>.</p>
@@ -278,9 +278,9 @@
             <p>You have control over how the app handles your data:</p>
             <ul>
                 <li><strong>Crash Reporting:</strong> Enable or disable in Settings at any time. When disabled, no data is sent to Firebase.</li>
-                <li><strong>Event History Retention:</strong> Configure how long detection events are stored (1-365 days) in Settings.</li>
                 <li><strong>Camera and Microphone:</strong> You can revoke these permissions at any time through Android Settings, though the app requires them for its core streaming functionality.</li>
-                <li><strong>Auto-Start:</strong> You can disable automatic startup after device reboot in Settings.</li>
+                <li><strong>Auto-Start:</strong> You can enable automatic startup after device reboot in Settings. This feature is off by default and may require granting additional permissions on some devices.</li>
+                <li><strong>Run in Background:</strong> You can enable background operation in Settings to allow streaming when the screen is off. This is off by default and may require disabling battery optimization for the app.</li>
             </ul>
         </section>
 

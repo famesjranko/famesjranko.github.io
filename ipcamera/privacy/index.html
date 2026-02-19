@@ -149,7 +149,7 @@
                 <ul>
                     <li>The app streams video and audio over your local network only</li>
                     <li>No cloud storage, no accounts, no user tracking</li>
-                    <li>Camera and microphone data never leaves your network unless you enable crash reporting</li>
+                    <li>Camera and microphone data never leaves your local network</li>
                     <li>Crash reports (if enabled) are sent to Firebase Crashlytics to help fix bugs</li>
                     <li>You can opt out of crash reporting at any time in Settings</li>
                     <li>Uninstalling the app removes all local data</li>
@@ -164,7 +164,7 @@
             <p>None. The app does not require account creation or login.</p>
 
             <h3>User Content</h3>
-            <p>None stored. Video and audio are streamed in real-time but are not recorded or stored by the app.</p>
+            <p>No media content stored. Video and audio are streamed in real-time but are not recorded or saved by the app. (Detection event metadata—such as timestamps and detection types—is stored locally; see Section 7.)</p>
 
             <h3>Device and Technical Data</h3>
             <p>If crash reporting is enabled, the following may be collected when the app crashes:</p>
@@ -289,7 +289,7 @@
             <p>The app includes several security measures:</p>
             <ul>
                 <li><strong>HTTPS by Default:</strong> All web dashboard connections use HTTPS encryption by default.</li>
-                <li><strong>Local Network Only:</strong> The app is designed for local network use. Streaming data does not traverse the internet unless you configure external access.</li>
+                <li><strong>Local Network Only:</strong> The app is designed for local network use. The app does not provide a cloud relay; any remote access is user-configured (e.g., router port forwarding or VPN) and outside our control.</li>
                 <li><strong>No Cloud Storage:</strong> Your video and audio are never stored on remote servers.</li>
                 <li><strong>On-Device Processing:</strong> ML detection features run entirely on your device.</li>
             </ul>

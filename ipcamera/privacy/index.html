@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - IP Camera</title>
+    <title>IP Camera Privacy Policy</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,59 +11,88 @@
             padding: 0;
         }
 
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --accent: #22c55e;
+            --accent-secondary: #4a90d9;
+            --border: #e0e0e0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            max-width: 800px;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 900px;
             margin: 0 auto;
             padding: 2rem 1.5rem;
-            background-color: #fafafa;
         }
 
         header {
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid var(--border);
         }
 
         h1 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: #1a1a1a;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
             margin-bottom: 0.5rem;
         }
 
         .meta {
             font-size: 0.875rem;
-            color: #666;
+            color: var(--text-secondary);
+        }
+
+        /* Sections */
+        section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
         h2 {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1a1a1a;
-            margin-top: 2rem;
+            color: var(--text-primary);
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
         }
 
         h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: #333;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
         }
 
         p {
             margin-bottom: 1rem;
+            color: var(--text-secondary);
         }
 
         ul {
             margin-bottom: 1rem;
             padding-left: 1.5rem;
+            color: var(--text-secondary);
         }
 
         li {
@@ -72,9 +101,9 @@
 
         .summary-box {
             background-color: #f5f5f5;
-            border-left: 4px solid #4a90d9;
+            border-left: 4px solid var(--accent);
             padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             border-radius: 0 4px 4px 0;
         }
 
@@ -93,26 +122,27 @@
 
         .permission-name {
             font-weight: 600;
-            color: #1a1a1a;
+            color: var(--text-primary);
         }
 
         .highlight {
-            background-color: #e8f4e8;
+            background-color: rgba(34, 197, 94, 0.1);
             padding: 0.75rem 1rem;
             border-radius: 4px;
             margin-bottom: 1rem;
         }
 
         footer {
-            margin-top: 3rem;
+            margin-top: 2rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid var(--border);
             font-size: 0.875rem;
-            color: #666;
+            color: var(--text-secondary);
+            text-align: center;
         }
 
         a {
-            color: #4a90d9;
+            color: var(--accent-secondary);
             text-decoration: none;
         }
 
@@ -120,8 +150,12 @@
             text-decoration: underline;
         }
 
+        strong {
+            color: var(--text-primary);
+        }
+
         @media (max-width: 600px) {
-            body {
+            .container {
                 padding: 1.5rem 1rem;
             }
 
@@ -132,200 +166,205 @@
             h2 {
                 font-size: 1.125rem;
             }
+
+            section {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Privacy Policy</h1>
-        <p class="meta">IP Camera Android Application</p>
-        <p class="meta">Effective Date: February 19, 2026 | Last Modified: February 19, 2026</p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>IP Camera Privacy Policy</h1>
+            <p class="subtitle">How your data is handled by the IP Camera Android application.</p>
+            <p class="meta">Last updated: February 19, 2026</p>
+        </header>
 
-    <main>
-        <section id="summary">
-            <h2>1. Summary</h2>
-            <div class="summary-box">
+        <main>
+            <section id="summary">
+                <h2>1. Summary</h2>
+                <div class="summary-box">
+                    <ul>
+                        <li>The app streams video and audio over your local network only</li>
+                        <li>No cloud storage, no accounts, no user tracking</li>
+                        <li>Camera and microphone data never leaves your local network</li>
+                        <li>Crash reports (if enabled) are sent to Firebase Crashlytics to help fix bugs</li>
+                        <li>You can opt out of crash reporting at any time in Settings</li>
+                        <li>Uninstalling the app removes all local data</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="data-collection">
+                <h2>2. Data You Collect</h2>
+
+                <h3>Account Data</h3>
+                <p>None. The app does not require account creation or login.</p>
+
+                <h3>User Content</h3>
+                <p>No media content stored. Video and audio are streamed in real-time but are not recorded or saved by the app. (Detection event metadata—such as timestamps and detection types—is stored locally; see Section 7.)</p>
+
+                <h3>Device and Technical Data</h3>
+                <p>If crash reporting is enabled, the following may be collected when the app crashes:</p>
                 <ul>
-                    <li>The app streams video and audio over your local network only</li>
-                    <li>No cloud storage, no accounts, no user tracking</li>
-                    <li>Camera and microphone data never leaves your local network</li>
-                    <li>Crash reports (if enabled) are sent to Firebase Crashlytics to help fix bugs</li>
-                    <li>You can opt out of crash reporting at any time in Settings</li>
-                    <li>Uninstalling the app removes all local data</li>
+                    <li>Device model and manufacturer</li>
+                    <li>Android OS version</li>
+                    <li>App version</li>
+                    <li>Crash stack traces and error logs</li>
                 </ul>
-            </div>
-        </section>
 
-        <section id="data-collection">
-            <h2>2. Data You Collect</h2>
+                <h3>Usage Data</h3>
+                <p>None. The app does not track how you use it.</p>
 
-            <h3>Account Data</h3>
-            <p>None. The app does not require account creation or login.</p>
+                <h3>Diagnostics</h3>
+                <p>Crash reports are collected by default and can be disabled in Settings. This data helps identify and fix bugs to improve app stability.</p>
+            </section>
 
-            <h3>User Content</h3>
-            <p>No media content stored. Video and audio are streamed in real-time but are not recorded or saved by the app. (Detection event metadata—such as timestamps and detection types—is stored locally; see Section 7.)</p>
+            <section id="data-usage">
+                <h2>3. How We Use Data</h2>
+                <p>The only data we receive is crash reports (if you have enabled this feature). We use crash reports exclusively to:</p>
+                <ul>
+                    <li>Identify bugs and stability issues</li>
+                    <li>Fix problems that cause the app to crash</li>
+                    <li>Improve overall app reliability</li>
+                </ul>
+                <p>We do not use any data for advertising, marketing, or profiling purposes.</p>
+            </section>
 
-            <h3>Device and Technical Data</h3>
-            <p>If crash reporting is enabled, the following may be collected when the app crashes:</p>
-            <ul>
-                <li>Device model and manufacturer</li>
-                <li>Android OS version</li>
-                <li>App version</li>
-                <li>Crash stack traces and error logs</li>
-            </ul>
+            <section id="permissions">
+                <h2>4. Permissions and Sensors</h2>
+                <p>The app requests the following Android permissions to function. Each permission is used only for its stated purpose:</p>
 
-            <h3>Usage Data</h3>
-            <p>None. The app does not track how you use it.</p>
+                <div class="permission-item">
+                    <p><span class="permission-name">Camera:</span> Required to capture video for streaming. This is the core function of the app. Video is streamed directly to viewers on your local network.</p>
+                </div>
 
-            <h3>Diagnostics</h3>
-            <p>Crash reports are collected by default and can be disabled in Settings. This data helps identify and fix bugs to improve app stability.</p>
-        </section>
+                <div class="permission-item">
+                    <p><span class="permission-name">Microphone (Record Audio):</span> Used for audio streaming and sound detection features. Audio can be streamed alongside video, and the ML-based sound detection can identify specific sounds like glass breaking or dogs barking.</p>
+                </div>
 
-        <section id="data-usage">
-            <h2>3. How We Use Data</h2>
-            <p>The only data we receive is crash reports (if you have enabled this feature). We use crash reports exclusively to:</p>
-            <ul>
-                <li>Identify bugs and stability issues</li>
-                <li>Fix problems that cause the app to crash</li>
-                <li>Improve overall app reliability</li>
-            </ul>
-            <p>We do not use any data for advertising, marketing, or profiling purposes.</p>
-        </section>
+                <div class="permission-item">
+                    <p><span class="permission-name">Internet and Network State:</span> Required to stream video and audio over your local network. The app also uses network information to display your streaming URLs.</p>
+                </div>
 
-        <section id="permissions">
-            <h2>4. Permissions and Sensors</h2>
-            <p>The app requests the following Android permissions to function. Each permission is used only for its stated purpose:</p>
+                <div class="permission-item">
+                    <p><span class="permission-name">Wi-Fi State:</span> Used to detect network connectivity and display connection information in the dashboard.</p>
+                </div>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Camera:</span> Required to capture video for streaming. This is the core function of the app. Video is streamed directly to viewers on your local network.</p>
-            </div>
+                <div class="permission-item">
+                    <p><span class="permission-name">Foreground Service:</span> Allows the app to continue streaming when running in the background. Android requires this permission for reliable background operation.</p>
+                </div>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Microphone (Record Audio):</span> Used for audio streaming and sound detection features. Audio can be streamed alongside video, and the ML-based sound detection can identify specific sounds like glass breaking or dogs barking.</p>
-            </div>
+                <div class="permission-item">
+                    <p><span class="permission-name">Wake Lock:</span> Prevents the device from sleeping during active streaming sessions, ensuring uninterrupted video capture.</p>
+                </div>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Internet and Network State:</span> Required to stream video and audio over your local network. The app also uses network information to display your streaming URLs.</p>
-            </div>
+                <div class="permission-item">
+                    <p><span class="permission-name">Receive Boot Completed:</span> Enables the auto-start feature, allowing the app to begin streaming automatically when your device restarts.</p>
+                </div>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Wi-Fi State:</span> Used to detect network connectivity and display connection information in the dashboard.</p>
-            </div>
+                <div class="permission-item">
+                    <p><span class="permission-name">Request Ignore Battery Optimizations:</span> Ensures reliable 24/7 operation by preventing Android from stopping the app to save battery.</p>
+                </div>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Foreground Service:</span> Allows the app to continue streaming when running in the background. Android requires this permission for reliable background operation.</p>
-            </div>
+                <div class="permission-item">
+                    <p><span class="permission-name">Flashlight:</span> Enables the torch feature for low-light situations.</p>
+                </div>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Wake Lock:</span> Prevents the device from sleeping during active streaming sessions, ensuring uninterrupted video capture.</p>
-            </div>
+                <div class="permission-item">
+                    <p><span class="permission-name">Post Notifications:</span> Required by Android to display the foreground service notification that indicates the app is actively streaming.</p>
+                </div>
+            </section>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Receive Boot Completed:</span> Enables the auto-start feature, allowing the app to begin streaming automatically when your device restarts.</p>
-            </div>
+            <section id="sharing">
+                <h2>5. Sharing and Third-Party Services</h2>
+                <p>We do not sell or share your data with third parties for marketing or advertising purposes.</p>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Request Ignore Battery Optimizations:</span> Ensures reliable 24/7 operation by preventing Android from stopping the app to save battery.</p>
-            </div>
+                <h3>Firebase Crashlytics</h3>
+                <p>If you enable crash reporting in Settings, crash data is sent to Firebase Crashlytics, a service provided by Google. This service helps us identify and fix bugs. You can learn more about how Google handles this data in the <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy Policy</a>.</p>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Flashlight:</span> Enables the torch feature for low-light situations.</p>
-            </div>
+                <div class="highlight">
+                    <p><strong>Opt-out available:</strong> You can disable crash reporting at any time by going to Settings and turning off "Crash Reporting."</p>
+                </div>
+            </section>
 
-            <div class="permission-item">
-                <p><span class="permission-name">Post Notifications:</span> Required by Android to display the foreground service notification that indicates the app is actively streaming.</p>
-            </div>
-        </section>
+            <section id="storage-location">
+                <h2>6. Data Storage and Processing Location</h2>
+                <p>The app is designed with privacy as a core principle:</p>
+                <ul>
+                    <li><strong>Streaming data:</strong> All video and audio streams stay on your local network. They are never sent to external servers.</li>
+                    <li><strong>Detection events:</strong> Object and sound detection processing happens entirely on your device. Detection history is stored locally.</li>
+                    <li><strong>Crash reports:</strong> If enabled, crash reports are sent to Firebase servers, which may be located in various countries depending on Google's infrastructure.</li>
+                </ul>
+            </section>
 
-        <section id="sharing">
-            <h2>5. Sharing and Third-Party Services</h2>
-            <p>We do not sell or share your data with third parties for marketing or advertising purposes.</p>
+            <section id="retention">
+                <h2>7. Data Retention and Deletion</h2>
 
-            <h3>Firebase Crashlytics</h3>
-            <p>If you enable crash reporting in Settings, crash data is sent to Firebase Crashlytics, a service provided by Google. This service helps us identify and fix bugs. You can learn more about how Google handles this data in the <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy Policy</a>.</p>
+                <h3>Local Data</h3>
+                <p>Event history (detection events, activity logs) is stored on your device. This data remains on your device until you uninstall the app or clear app data.</p>
 
-            <div class="highlight">
-                <p><strong>Opt-out available:</strong> You can disable crash reporting at any time by going to Settings and turning off "Crash Reporting."</p>
-            </div>
-        </section>
+                <h3>Crash Reports</h3>
+                <p>If crash reporting is enabled, Google retains crash data according to their data retention policies. You can view Google's retention practices in their <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy documentation</a>.</p>
 
-        <section id="storage-location">
-            <h2>6. Data Storage and Processing Location</h2>
-            <p>The app is designed with privacy as a core principle:</p>
-            <ul>
-                <li><strong>Streaming data:</strong> All video and audio streams stay on your local network. They are never sent to external servers.</li>
-                <li><strong>Detection events:</strong> Object and sound detection processing happens entirely on your device. Detection history is stored locally.</li>
-                <li><strong>Crash reports:</strong> If enabled, crash reports are sent to Firebase servers, which may be located in various countries depending on Google's infrastructure.</li>
-            </ul>
-        </section>
+                <h3>Uninstallation</h3>
+                <p>Uninstalling the app removes all locally stored data, including settings, event history, and certificates.</p>
+            </section>
 
-        <section id="retention">
-            <h2>7. Data Retention and Deletion</h2>
+            <section id="user-controls">
+                <h2>8. User Choices and Controls</h2>
+                <p>You have control over how the app handles your data:</p>
+                <ul>
+                    <li><strong>Crash Reporting:</strong> Enable or disable in Settings at any time. When disabled, no data is sent to Firebase.</li>
+                    <li><strong>Camera and Microphone:</strong> You can revoke these permissions at any time through Android Settings, though the app requires them for its core streaming functionality.</li>
+                    <li><strong>Auto-Start:</strong> You can enable automatic startup after device reboot in Settings. This feature is off by default and may require granting additional permissions on some devices.</li>
+                    <li><strong>Run in Background:</strong> You can enable background operation in Settings to allow streaming when the screen is off. This is off by default and may require disabling battery optimization for the app.</li>
+                </ul>
+            </section>
 
-            <h3>Local Data</h3>
-            <p>Event history (detection events, activity logs) is stored on your device. This data remains on your device until you uninstall the app or clear app data.</p>
+            <section id="security">
+                <h2>9. Security</h2>
+                <p>The app includes several security measures:</p>
+                <ul>
+                    <li><strong>HTTPS by Default:</strong> All web dashboard connections use HTTPS encryption by default.</li>
+                    <li><strong>Local Network Only:</strong> The app is designed for local network use. The app does not provide a cloud relay; any remote access is user-configured (e.g., router port forwarding or VPN) and outside our control.</li>
+                    <li><strong>No Cloud Storage:</strong> Your video and audio are never stored on remote servers.</li>
+                    <li><strong>On-Device Processing:</strong> ML detection features run entirely on your device.</li>
+                </ul>
+            </section>
 
-            <h3>Crash Reports</h3>
-            <p>If crash reporting is enabled, Google retains crash data according to their data retention policies. You can view Google's retention practices in their <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy documentation</a>.</p>
+            <section id="children">
+                <h2>10. Children's Privacy</h2>
+                <p>This app is not directed at children under the age of 13. We do not knowingly collect personal information from children. The app does not collect personal information from any users, regardless of age.</p>
+            </section>
 
-            <h3>Uninstallation</h3>
-            <p>Uninstalling the app removes all locally stored data, including settings, event history, and certificates.</p>
-        </section>
+            <section id="international">
+                <h2>11. International Transfers</h2>
+                <p>If crash reporting is enabled, crash data may be processed by Google in various locations around the world as part of the Firebase Crashlytics service. Google maintains appropriate safeguards for international data transfers as described in their privacy documentation.</p>
+            </section>
 
-        <section id="user-controls">
-            <h2>8. User Choices and Controls</h2>
-            <p>You have control over how the app handles your data:</p>
-            <ul>
-                <li><strong>Crash Reporting:</strong> Enable or disable in Settings at any time. When disabled, no data is sent to Firebase.</li>
-                <li><strong>Camera and Microphone:</strong> You can revoke these permissions at any time through Android Settings, though the app requires them for its core streaming functionality.</li>
-                <li><strong>Auto-Start:</strong> You can enable automatic startup after device reboot in Settings. This feature is off by default and may require granting additional permissions on some devices.</li>
-                <li><strong>Run in Background:</strong> You can enable background operation in Settings to allow streaming when the screen is off. This is off by default and may require disabling battery optimization for the app.</li>
-            </ul>
-        </section>
+            <section id="legal">
+                <h2>12. Legal Requests and Compliance</h2>
+                <p>We may disclose information if required to do so by law or in response to valid legal requests by public authorities. However, given that we collect minimal data (only crash reports if enabled), there is very little information we could provide.</p>
+            </section>
 
-        <section id="security">
-            <h2>9. Security</h2>
-            <p>The app includes several security measures:</p>
-            <ul>
-                <li><strong>HTTPS by Default:</strong> All web dashboard connections use HTTPS encryption by default.</li>
-                <li><strong>Local Network Only:</strong> The app is designed for local network use. The app does not provide a cloud relay; any remote access is user-configured (e.g., router port forwarding or VPN) and outside our control.</li>
-                <li><strong>No Cloud Storage:</strong> Your video and audio are never stored on remote servers.</li>
-                <li><strong>On-Device Processing:</strong> ML detection features run entirely on your device.</li>
-            </ul>
-        </section>
+            <section id="changes">
+                <h2>13. Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. When we make changes, we will update the "Last Modified" date at the top of this page. We encourage you to review this policy periodically.</p>
+                <p>For significant changes that affect how we handle your data, we will provide notice through the app or other appropriate means.</p>
+            </section>
 
-        <section id="children">
-            <h2>10. Children's Privacy</h2>
-            <p>This app is not directed at children under the age of 13. We do not knowingly collect personal information from children. The app does not collect personal information from any users, regardless of age.</p>
-        </section>
+            <section id="contact">
+                <h2>14. Contact</h2>
+                <p>If you have questions about this Privacy Policy or the app's privacy practices, please contact us at:</p>
+                <p><a href="mailto:famesjranko@gmail.com">famesjranko@gmail.com</a></p>
+            </section>
+        </main>
 
-        <section id="international">
-            <h2>11. International Transfers</h2>
-            <p>If crash reporting is enabled, crash data may be processed by Google in various locations around the world as part of the Firebase Crashlytics service. Google maintains appropriate safeguards for international data transfers as described in their privacy documentation.</p>
-        </section>
-
-        <section id="legal">
-            <h2>12. Legal Requests and Compliance</h2>
-            <p>We may disclose information if required to do so by law or in response to valid legal requests by public authorities. However, given that we collect minimal data (only crash reports if enabled), there is very little information we could provide.</p>
-        </section>
-
-        <section id="changes">
-            <h2>13. Changes to This Policy</h2>
-            <p>We may update this Privacy Policy from time to time. When we make changes, we will update the "Last Modified" date at the top of this page. We encourage you to review this policy periodically.</p>
-            <p>For significant changes that affect how we handle your data, we will provide notice through the app or other appropriate means.</p>
-        </section>
-
-        <section id="contact">
-            <h2>14. Contact</h2>
-            <p>If you have questions about this Privacy Policy or the app's privacy practices, please contact us at:</p>
-            <p><a href="mailto:famesjranko@gmail.com">famesjranko@gmail.com</a></p>
-        </section>
-    </main>
-
-    <footer>
-        <p>IP Camera Privacy Policy</p>
-        <p>Last updated: February 19, 2026</p>
-    </footer>
+        <footer>
+            <p>IP Camera Privacy Policy</p>
+        </footer>
+    </div>
 </body>
 </html>

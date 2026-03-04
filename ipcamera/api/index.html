@@ -38,6 +38,24 @@
             padding: 2rem 1.5rem;
         }
 
+        .top-nav {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .top-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .top-nav a:hover {
+            color: var(--accent);
+        }
+
         header {
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
@@ -341,6 +359,11 @@
 </head>
 <body>
     <div class="container">
+        <nav class="top-nav">
+            <a href="../">&larr; Home</a>
+            <a href="../privacy/">Privacy</a>
+        </nav>
+
         <header>
             <h1>IP Camera API Reference <span class="pro-badge" style="font-size: 0.5em; vertical-align: middle;">PRO</span></h1>
             <p class="subtitle">Complete HTTP and WebSocket API documentation for integrating with IP Camera.</p>

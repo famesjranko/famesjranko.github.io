@@ -150,6 +150,24 @@
             text-decoration: underline;
         }
 
+        .top-nav {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .top-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .top-nav a:hover {
+            color: var(--accent);
+        }
+
         strong {
             color: var(--text-primary);
         }
@@ -175,6 +193,11 @@
 </head>
 <body>
     <div class="container">
+        <nav class="top-nav">
+            <a href="../">&larr; Home</a>
+            <a href="../api/">API Docs</a>
+        </nav>
+
         <header>
             <h1>IP Camera Privacy Policy</h1>
             <p class="subtitle">How your data is handled by the IP Camera Android application.</p>

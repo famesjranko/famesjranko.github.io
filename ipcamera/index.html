@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Camera - Local streaming. No cloud required.</title>
+    <meta name="description" content="Transform your Android phone into a wireless IP camera with H.264 streaming, RTSP support, and zero cloud dependencies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #030303;
+            --card-bg: rgba(255, 255, 255, 0.015);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --accent: #22c55e;
+            --accent-dim: #1a9e4a;
+            --accent-glow: rgba(34, 197, 94, 0.5);
+            --text-primary: #e8e8e8;
+            --text-secondary: #666;
+            --text-tertiary: #444;
+            --grid-color: rgba(34, 197, 94, 0.03);
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Radial glow behind main content */
+        .glow-bg {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Noise overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        .noise::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            animation: grain 0.3s steps(1) infinite;
+        }
+
+        @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-2%, -2%); }
+            50% { transform: translate(2%, 2%); }
+            75% { transform: translate(-2%, 2%); }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Hero section */
+        .hero {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 20px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.1s forwards;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 0 6px transparent; }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.2s forwards;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 440px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.3s forwards;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.4s forwards;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.9rem 1.6rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #2dd469;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Viewfinder preview */
+        .hero-visual {
+            flex: 1;
+            max-width: 480px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.5s forwards;
+        }
+
+        .viewfinder {
+            position: relative;
+            aspect-ratio: 4/3;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.3) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Corner brackets */
+        .viewfinder::before,
+        .viewfinder::after,
+        .viewfinder .corner-bl,
+        .viewfinder .corner-br {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-color: var(--accent);
+            border-style: solid;
+            border-width: 0;
+            opacity: 0.6;
+        }
+
+        .viewfinder::before {
+            top: 16px;
+            left: 16px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .viewfinder::after {
+            top: 16px;
+            right: 16px;
+            border-top-width: 2px;
+            border-right-width: 2px;
+        }
+
+        .viewfinder .corner-bl {
+            bottom: 16px;
+            left: 16px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .viewfinder .corner-br {
+            bottom: 16px;
+            right: 16px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+        }
+
+        /* Scan line in viewfinder */
+        .viewfinder .scan {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            animation: scanVertical 3s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes scanVertical {
+            0%, 100% { top: 0; opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* HUD elements */
+        .hud {
+            position: absolute;
+            font-size: 0.65rem;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .hud-rec {
+            top: 24px;
+            right: 28px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .hud-rec::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .hud-time {
+            bottom: 24px;
+            left: 28px;
+        }
+
+        .hud-res {
+            bottom: 24px;
+            right: 28px;
+        }
+
+        .hud-crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+        }
+
+        .hud-crosshair::before,
+        .hud-crosshair::after {
+            content: '';
+            position: absolute;
+            background: var(--accent);
+            opacity: 0.3;
+        }
+
+        .hud-crosshair::before {
+            width: 100%;
+            height: 1px;
+            top: 50%;
+        }
+
+        .hud-crosshair::after {
+            width: 1px;
+            height: 100%;
+            left: 50%;
+        }
+
+        /* Features section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.6s forwards;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .feature:hover {
+            border-color: rgba(34, 197, 94, 0.2);
+            background: rgba(34, 197, 94, 0.02);
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .feature-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .feature h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out 0.7s forwards;
+        }
+
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .tagline {
+                max-width: 100%;
+            }
+
+            .hero-visual {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 0.95rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            footer {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="glow-bg"></div>
+    <div class="noise"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="icon.png" alt="" class="logo-icon">
+                IP Camera
+            </div>
+            <nav class="nav-links">
+                <a href="api/">API Docs</a>
+                <a href="privacy/">Privacy</a>
+            </nav>
+        </header>
+
+        <main class="hero">
+            <div class="hero-content">
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Streaming Ready
+                </div>
+
+                <h1>Your phone.<br><span>Your camera.</span><br>Your network.</h1>
+
+                <p class="tagline">
+                    Transform any Android device into a professional IP camera.
+                    H.264 streaming, RTSP support, motion detection — all running
+                    locally with zero cloud dependencies.
+                </p>
+
+                <div class="cta-buttons">
+                    <a href="https://play.google.com/store/apps/details?id=com.landofoz.ipcamera" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 0 1-.61-.92V2.734a1 1 0 0 1 .609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 0 1 0 1.73l-2.808 1.626L15.206 12l2.492-2.491zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/>
+                        </svg>
+                        Get on Google Play
+                    </a>
+                    <a href="api/" class="btn btn-secondary">
+                        View API Docs
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="viewfinder">
+                    <div class="corner-bl"></div>
+                    <div class="corner-br"></div>
+                    <div class="scan"></div>
+                    <div class="hud-crosshair"></div>
+                    <div class="hud hud-rec">REC</div>
+                    <div class="hud hud-time" id="hud-time">00:00:00</div>
+                    <div class="hud hud-res">1080p / 30fps</div>
+                </div>
+            </div>
+        </main>
+
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 7l-7 5 7 5V7z"></path>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                </div>
+                <h3>H.264 Streaming</h3>
+                <p>Hardware-accelerated encoding with SPS/PPS for instant playback</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                </div>
+                <h3>RTSP Support</h3>
+                <p>Standard protocol for VLC, OBS, NVR systems, and more</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </div>
+                <h3>Smart Detection</h3>
+                <p>On-device motion & sound detection with historical event charts</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 11a9 9 0 0 1 9 9"></path>
+                        <path d="M4 4a16 16 0 0 1 16 16"></path>
+                        <circle cx="5" cy="19" r="1"></circle>
+                    </svg>
+                </div>
+                <h3>MQTT & REST API</h3>
+                <p>Integrate with Home Assistant and custom automations</p>
+            </div>
+        </section>
+
+        <footer>
+            <span>&copy; 2026 IP Camera</span>
+            <div class="footer-links">
+                <a href="privacy/">Privacy Policy</a>
+                <a href="api/">API Documentation</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Live timestamp in viewfinder
+        function updateTime() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('hud-time').textContent = `${h}:${m}:${s}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>

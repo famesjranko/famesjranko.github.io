@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - IP Camera</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-code: #1e1e1e;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --accent: #22c55e;
+            --accent-secondary: #4a90d9;
+            --border: #e0e0e0;
+            --method-get: #22c55e;
+            --method-post: #3b82f6;
+            --method-delete: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .app-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .app-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: opacity 0.15s;
+        }
+
+        .app-link:hover {
+            opacity: 0.9;
+        }
+
+        .app-link.secondary {
+            background: var(--accent-secondary);
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .nav-list {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Sections */
+        section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin-bottom: 0.25rem;
+        }
+
+        code {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 0.875em;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--bg-code);
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: #2d2d2d;
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .copy-btn {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background: #444;
+            border: none;
+            border-radius: 4px;
+            color: #ccc;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .copy-btn:hover {
+            background: #555;
+        }
+
+        .copy-btn.copied {
+            background: var(--accent);
+            color: white;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 0.8125rem;
+            line-height: 1.5;
+            color: #e0e0e0;
+        }
+
+        /* Method badges */
+        .method {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .method-get { background: rgba(34, 197, 94, 0.15); color: var(--method-get); }
+        .method-post { background: rgba(59, 130, 246, 0.15); color: var(--method-post); }
+        .method-delete { background: rgba(239, 68, 68, 0.15); color: var(--method-delete); }
+
+        .endpoint {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+        }
+
+        .pro-badge {
+            display: inline-block;
+            font-size: 0.625rem;
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            margin: 1rem 0;
+        }
+
+        th {
+            text-align: left;
+            padding: 0.75rem;
+            background: #f5f5f5;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border: 1px solid var(--border);
+        }
+
+        td {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        /* Note boxes */
+        .note {
+            background: #f0f9ff;
+            border-left: 4px solid var(--accent-secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .note p {
+            margin: 0;
+        }
+
+        .note strong {
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            section {
+                padding: 1rem;
+            }
+
+            .nav-container {
+                display: none;
+            }
+
+            pre {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>IP Camera API Reference <span class="pro-badge" style="font-size: 0.5em; vertical-align: middle;">PRO</span></h1>
+            <p class="subtitle">Complete HTTP and WebSocket API documentation for integrating with IP Camera.</p>
+            <div class="note" style="margin: 1rem 0;">
+                <p><strong>Pro Feature:</strong> Direct API access (curl, scripts, Home Assistant) requires a Pro license. The web dashboard is available to all users.</p>
+            </div>
+            <div class="app-links">
+                <a href="https://play.google.com/store/apps/details?id=com.landofoz.ipcamera" class="app-link">Get on Google Play</a>
+            </div>
+        </header>
+
+        <nav class="nav-container">
+            <ul class="nav-list">
+                <li><a href="#overview" class="nav-link">Overview</a></li>
+                <li><a href="#authentication" class="nav-link">Authentication</a></li>
+                <li><a href="#csrf" class="nav-link">CSRF</a></li>
+                <li><a href="#https" class="nav-link">HTTPS</a></li>
+                <li><a href="#reverse-proxy" class="nav-link">Reverse Proxy</a></li>
+                <li><a href="#streaming" class="nav-link">Streaming</a></li>
+                <li><a href="#settings" class="nav-link">Settings</a></li>
+                <li><a href="#status" class="nav-link">Status</a></li>
+                <li><a href="#rtsp" class="nav-link">RTSP</a></li>
+                <li><a href="#mqtt" class="nav-link">MQTT</a></li>
+                <li><a href="#events" class="nav-link">Events</a></li>
+                <li><a href="#websocket" class="nav-link">WebSocket</a></li>
+                <li><a href="#errors" class="nav-link">Errors</a></li>
+            </ul>
+        </nav>
+
+        <!-- DERIVED FROM: docs/API.md is the source of truth for API documentation.
+             When updating this file, ensure changes are synced from API.md first. -->
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>The IP Camera API provides HTTP endpoints and WebSocket communication for controlling camera settings, accessing video streams, and integrating with external systems like Home Assistant.</p>
+
+            <h3>Base URL</h3>
+            <p>All API requests are made to the device's IP address on port 8443 (HTTPS):</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Base URL</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>https://&lt;device-ip&gt;:8443</pre>
+            </div>
+
+            <h3>Pro vs Free Access</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Access Method</th>
+                        <th>Free Users</th>
+                        <th>Pro Users</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Web Dashboard (browser)</td>
+                        <td>Basic features only</td>
+                        <td>All features</td>
+                    </tr>
+                    <tr>
+                        <td>Direct API (curl, scripts, Home Assistant)</td>
+                        <td>Blocked (403)</td>
+                        <td>Full access</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Quick Start</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Test connection</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k https://192.168.1.100:8443/status</pre>
+            </div>
+            <div class="note">
+                <p><strong>Note:</strong> The <code>-k</code> flag accepts the self-signed certificate. For production, install the certificate from <code>/cert</code>.</p>
+            </div>
+        </section>
+
+        <section id="authentication">
+            <h2>Authentication</h2>
+            <p>When password protection is enabled, most endpoints require authentication.</p>
+
+            <h3>Token-Based Auth</h3>
+            <p>After authenticating via <code>POST /auth</code>, include the token in requests:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Authorization Header</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>Authorization: Bearer &lt;token&gt;</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/auth</span></h4>
+            <p>Authenticate and receive a session token.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Request</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -X POST https://192.168.1.100:8443/auth \
+  -H "Content-Type: application/json" \
+  -d '{"password": "your_password"}'</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true,
+  "token": "a1b2c3d4e5f6...",
+  "csrfToken": "g7h8i9j0k1l2..."
+}</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response (401 Unauthorized)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": false,
+  "error": "Invalid password"
+}</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response (429 Too Many Requests)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": false,
+  "error": "Too many attempts",
+  "lockout": true,
+  "lockoutRemaining": 30
+}</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/auth/status</span></h4>
+            <p>Check if authentication is enabled.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "enabled": true,
+  "configured": true
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/auth/logout</span></h4>
+            <p>Revoke the current session token.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true
+}</pre>
+            </div>
+
+            <h3>Public Endpoints (No Auth Required)</h3>
+            <ul>
+                <li><code>/</code> and dashboard assets</li>
+                <li><code>/auth</code>, <code>/auth/status</code>, <code>/auth/logout</code></li>
+                <li><code>/cert/info</code></li>
+            </ul>
+
+            <h3>Certificate Endpoints</h3>
+            <h4><span class="method method-get">GET</span><span class="endpoint">/cert</span></h4>
+            <p>Download the self-signed certificate (PEM format) for installing on client devices.</p>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/cert/info</span></h4>
+            <p>Get certificate metadata.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "subject": "CN=IP Camera, O=Local Network, C=US",
+  "issuer": "CN=IP Camera, O=Local Network, C=US",
+  "notBefore": 1707000000000,
+  "notAfter": 1738536000000,
+  "serialNumber": "a1b2c3d4e5f6",
+  "status": "valid",
+  "downloadUrl": "/cert"
+}</pre>
+            </div>
+            <p><strong>Note:</strong> <code>notBefore</code> and <code>notAfter</code> are Unix timestamps in milliseconds.</p>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/cert/regenerate</span></h4>
+            <p>Regenerate the HTTPS certificate. Useful after IP address change. Requires authentication.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -X POST -H "Authorization: Bearer YOUR_TOKEN" \
+  https://192.168.1.100:8443/cert/regenerate</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true
+}</pre>
+            </div>
+        </section>
+
+        <section id="csrf">
+            <h2>CSRF Protection</h2>
+            <p>State-changing requests (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>) require CSRF protection when using cookie-based authentication.</p>
+
+            <h3>When CSRF is Required</h3>
+            <p>CSRF validation applies to requests that:</p>
+            <ul>
+                <li>Use cookie-based authentication (browser sessions)</li>
+                <li>Perform state-changing operations (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>)</li>
+            </ul>
+            <div class="note">
+                <p><strong>Note:</strong> Pro users using Bearer token authentication (via <code>Authorization</code> header) are NOT subject to CSRF checks. CSRF protection only applies to cookie-based authentication.</p>
+            </div>
+
+            <h3>How to Get the CSRF Token</h3>
+            <p>When authenticating via <code>POST /auth</code>, the response includes a <code>csrfToken</code> field:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>POST /auth Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true,
+  "token": "a1b2c3d4e5f6...",
+  "csrfToken": "g7h8i9j0k1l2..."
+}</pre>
+            </div>
+
+            <h3>How to Include the CSRF Token</h3>
+            <p>Include the CSRF token in the <code>X-CSRF-Token</code> header for all state-changing requests:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>X-CSRF-Token Header</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>X-CSRF-Token: g7h8i9j0k1l2...</pre>
+            </div>
+
+            <h4>Example: Update Settings with CSRF Token</h4>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -X POST https://192.168.1.100:8443/settings \
+  -H "Cookie: session=..." \
+  -H "X-CSRF-Token: your_csrf_token" \
+  -H "Content-Type: application/json" \
+  -d '{"frameRate": 30}'</pre>
+            </div>
+
+            <h3>Error Response</h3>
+            <p>If the CSRF token is missing or invalid, the server returns a <code>403 Forbidden</code> response:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response (403 Forbidden)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "error": "Invalid CSRF token"
+}</pre>
+            </div>
+        </section>
+
+        <section id="https">
+            <h2>HTTPS Requirement</h2>
+            <p>All API endpoints require HTTPS (port 8443). The dashboard requires HTTPS for secure session cookies.</p>
+
+            <h3>HTTP Redirect Server (Port 8080)</h3>
+            <p>An HTTP listener on port 8080 provides friendly handling for users who type <code>http://</code>:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Route Type</th>
+                        <th>HTTP Behavior</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dashboard/UI (<code>/</code>, <code>*.html</code>, <code>*.js</code>, <code>*.css</code>)</td>
+                        <td>302 Redirect to <code>https://host:8443/...</code></td>
+                    </tr>
+                    <tr>
+                        <td>Session endpoints (<code>/auth</code>, <code>/auth/logout</code>)</td>
+                        <td>403 Forbidden with JSON error</td>
+                    </tr>
+                    <tr>
+                        <td>API endpoints</td>
+                        <td>403 Forbidden with JSON error</td>
+                    </tr>
+                    <tr>
+                        <td>WebSocket upgrade</td>
+                        <td>403 Forbidden (cannot redirect WebSocket)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Response Format</h3>
+            <p>When HTTPS is required but the request was made over HTTP, the server returns:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response (403 Forbidden)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "error": "HTTPS required",
+  "httpsPort": 8443
+}</pre>
+            </div>
+
+            <div class="note">
+                <p><strong>Note:</strong> Always use <code>https://</code> with port 8443 for API requests. The HTTP server on port 8080 exists only to redirect users who accidentally use <code>http://</code>.</p>
+            </div>
+        </section>
+
+        <section id="reverse-proxy">
+            <h2>Reverse Proxy Support</h2>
+            <p>For deployments behind a TLS-terminating proxy (nginx, Apache, Caddy, Cloudflare), the app supports the <code>X-Forwarded-Proto</code> header.</p>
+
+            <h3>How It Works</h3>
+            <ol>
+                <li>The proxy terminates TLS and forwards HTTP to the app</li>
+                <li>Set <code>X-Forwarded-Proto: https</code> header in proxy config</li>
+                <li>Enable reverse proxy mode in app Settings (Pro feature)</li>
+                <li>The app trusts this header when reverse proxy mode is enabled</li>
+            </ol>
+
+            <h3>nginx Configuration Example</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>nginx.conf</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>location /ipcamera/ {
+    proxy_pass https://192.168.1.100:8443/;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host;
+    proxy_ssl_verify off;
+}</pre>
+            </div>
+
+            <div class="note" style="border-left-color: #f59e0b; background: #fef3c7;">
+                <p><strong>Security Warning:</strong> Only enable reverse proxy mode if you trust the <code>X-Forwarded-Proto</code> header. When enabled, the header is trusted from <strong>any source</strong>. Ensure your network prevents unauthorized clients from connecting directly to the app, bypassing the proxy.</p>
+            </div>
+
+            <div class="note">
+                <p><strong>Note:</strong> Reverse proxy mode is a <span class="pro-badge">PRO</span> feature and must be enabled in app settings before the <code>X-Forwarded-Proto</code> header will be recognized.</p>
+            </div>
+        </section>
+
+        <section id="streaming">
+            <h2>Streaming</h2>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/stream</span></h4>
+            <p>MJPEG video stream for viewing in browsers and media players.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>HTML embed</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>&lt;img src="https://192.168.1.100:8443/stream?token=YOUR_TOKEN" /&gt;</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/snapshot</span></h4>
+            <p>Latest JPEG frame from the video stream.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k "https://192.168.1.100:8443/snapshot?token=YOUR_TOKEN" -o snapshot.jpg</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/capture</span></h4>
+            <p>High-resolution still capture (full sensor resolution). Must be triggered via WebSocket first.</p>
+        </section>
+
+        <section id="settings">
+            <h2>Settings</h2>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/settings</span></h4>
+            <p>Get all current settings.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -H "Authorization: Bearer YOUR_TOKEN" https://192.168.1.100:8443/settings</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "resolution": "1280x720",
+  "frameRate": 30,
+  "jpegQuality": 85,
+  "cameraId": "0",
+  "torchEnabled": false,
+  "audioEnabled": true,
+  "rotation": 0,
+  "keepScreenOn": true,
+  "showPreview": true,
+  "motionEnabled": true,
+  "motionSensitivity": 5,
+  "soundEnabled": false,
+  "rtspEnabled": false,
+  "mqttEnabled": false,
+  "license": {
+    "isPro": true,
+    "state": "ACTIVE"
+  }
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/settings</span></h4>
+            <p>Update settings. Partial updates allowed.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -X POST https://192.168.1.100:8443/settings \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"resolution": "1920x1080", "frameRate": 20}'</pre>
+            </div>
+
+            <h3>Available Settings</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Camera Settings -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Camera Settings</strong></td></tr>
+                    <tr><td><code>resolution</code></td><td>string</td><td>Video resolution (e.g., "1280x720")</td></tr>
+                    <tr><td><code>frameRate</code></td><td>int</td><td>Frames per second (1-60)</td></tr>
+                    <tr><td><code>jpegQuality</code></td><td>int</td><td>JPEG quality for MJPEG (1-100)</td></tr>
+                    <tr><td><code>cameraId</code></td><td>string</td><td>Camera ID ("0" = back, "1" = front)</td></tr>
+                    <tr><td><code>useFrontCamera</code></td><td>boolean</td><td>Use front camera</td></tr>
+                    <tr><td><code>torchEnabled</code></td><td>boolean</td><td>Flashlight on/off</td></tr>
+                    <tr><td><code>rotation</code></td><td>int</td><td>Manual rotation (0, 90, 180, 270)</td></tr>
+                    <!-- Display Settings -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Display Settings</strong></td></tr>
+                    <tr><td><code>keepScreenOn</code></td><td>boolean</td><td>Keep screen on while streaming</td></tr>
+                    <tr><td><code>showPreview</code></td><td>boolean</td><td>Show camera preview on device</td></tr>
+                    <!-- Background Operation -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Background Operation</strong></td></tr>
+                    <tr><td><code>runInBackground</code></td><td>boolean</td><td>Allow background operation</td></tr>
+                    <tr><td><code>cameraStandbyMode</code></td><td>boolean</td><td>Enter standby when no clients</td></tr>
+                    <!-- Audio Settings -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Audio Settings</strong></td></tr>
+                    <tr><td><code>audioEnabled</code></td><td>boolean</td><td>Enable audio capture</td></tr>
+                    <!-- Motion Detection -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Motion Detection</strong></td></tr>
+                    <tr><td><code>motionEnabled</code></td><td>boolean</td><td>Enable motion detection</td></tr>
+                    <tr><td><code>motionSensitivity</code></td><td>int</td><td>Motion sensitivity (1-10)</td></tr>
+                    <tr><td><code>motionCooldown</code></td><td>int</td><td>Cooldown between events (seconds)</td></tr>
+                    <!-- Sound Detection -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Sound Detection</strong></td></tr>
+                    <tr><td><code>soundEnabled</code></td><td>boolean</td><td>Enable sound detection</td></tr>
+                    <tr><td><code>soundThreshold</code></td><td>int</td><td>Sound threshold (0-100)</td></tr>
+                    <tr><td><code>soundCooldown</code></td><td>int</td><td>Cooldown between events (seconds)</td></tr>
+                    <!-- ML Classification -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>ML Classification</strong></td></tr>
+                    <tr><td><code>dogBarkClassificationEnabled</code></td><td>boolean</td><td>Enable dog bark detection</td></tr>
+                    <tr><td><code>dogBarkClassificationConfidence</code></td><td>int</td><td>Confidence threshold (1-100)</td></tr>
+                    <tr><td><code>babyCryClassificationEnabled</code></td><td>boolean</td><td>Enable baby cry detection</td></tr>
+                    <tr><td><code>babyCryClassificationConfidence</code></td><td>int</td><td>Confidence threshold (1-100)</td></tr>
+                    <tr><td><code>objectPersonDetectionEnabled</code></td><td>boolean</td><td>Enable person detection</td></tr>
+                    <tr><td><code>objectPersonDetectionConfidence</code></td><td>int</td><td>Confidence threshold (1-100)</td></tr>
+                    <tr><td><code>objectDogDetectionEnabled</code></td><td>boolean</td><td>Enable dog object detection</td></tr>
+                    <tr><td><code>objectDogDetectionConfidence</code></td><td>int</td><td>Confidence threshold (1-100)</td></tr>
+                    <tr><td><code>objectDetectionSamplingRate</code></td><td>int</td><td>Sampling rate for object detection</td></tr>
+                    <!-- Event History -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>Event History</strong></td></tr>
+                    <tr><td><code>eventHistoryEnabled</code></td><td>boolean</td><td>Enable event history</td></tr>
+                    <!-- RTSP Settings -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>RTSP Settings</strong></td></tr>
+                    <tr><td><code>rtspEnabled</code></td><td>boolean</td><td>Enable RTSP server</td></tr>
+                    <tr><td><code>rtspPort</code></td><td>int</td><td>RTSP port number</td></tr>
+                    <tr><td><code>rtspPath</code></td><td>string</td><td>Stream path (e.g., "/stream")</td></tr>
+                    <tr><td><code>rtspUsername</code></td><td>string</td><td>RTSP authentication username</td></tr>
+                    <tr><td><code>rtspHasPassword</code></td><td>boolean</td><td>Whether password is set <em>(read-only)</em></td></tr>
+                    <!-- MQTT Settings -->
+                    <tr style="background: #f0f0f0;"><td colspan="3"><strong>MQTT Settings</strong></td></tr>
+                    <tr><td><code>mqttEnabled</code></td><td>boolean</td><td>Enable MQTT client</td></tr>
+                    <tr><td><code>mqttBrokerUrl</code></td><td>string</td><td>Broker URL</td></tr>
+                    <tr><td><code>mqttPort</code></td><td>int</td><td>Broker port</td></tr>
+                    <tr><td><code>mqttHasUsername</code></td><td>boolean</td><td>Whether username is set <em>(read-only)</em></td></tr>
+                    <tr><td><code>mqttHasPassword</code></td><td>boolean</td><td>Whether password is set <em>(read-only)</em></td></tr>
+                    <tr><td><code>mqttClientId</code></td><td>string</td><td>Client ID</td></tr>
+                    <tr><td><code>mqttTopicPrefix</code></td><td>string</td><td>Topic prefix</td></tr>
+                    <tr><td><code>mqttUseTls</code></td><td>boolean</td><td>Use TLS encryption</td></tr>
+                    <tr><td><code>mqttAcceptSelfSigned</code></td><td>boolean</td><td>Accept self-signed certificates</td></tr>
+                    <tr><td><code>mqttTelemetryIntervalSec</code></td><td>int</td><td>Telemetry interval (seconds)</td></tr>
+                    <tr><td><code>mqttCommandsEnabled</code></td><td>boolean</td><td>Enable MQTT commands</td></tr>
+                </tbody>
+            </table>
+
+            <h3>License Object (Read-Only)</h3>
+            <p>The <code>license</code> field is a nested object that provides Pro license status information:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>License Object Structure</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "license": {
+    "isPro": true,
+    "state": "ACTIVE",
+    "source": "REAL_PURCHASE",
+    "billing": {
+      "available": true,
+      "status": "CONNECTED"
+    }
+  }
+}</pre>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>license.isPro</code></td><td>boolean</td><td>Whether Pro license is active</td></tr>
+                    <tr><td><code>license.state</code></td><td>string</td><td>"ACTIVE", "INACTIVE", or "UNKNOWN"</td></tr>
+                    <tr><td><code>license.source</code></td><td>string</td><td>"REAL_PURCHASE", "DEBUG_OVERRIDE", or "NONE"</td></tr>
+                    <tr><td><code>license.billing.available</code></td><td>boolean</td><td>Whether billing service is available</td></tr>
+                    <tr><td><code>license.billing.status</code></td><td>string</td><td>"CONNECTED", "UNAVAILABLE_RECOVERABLE", or "UNAVAILABLE_HARD"</td></tr>
+                </tbody>
+            </table>
+            <div class="note">
+                <p><strong>Note:</strong> Fields marked <em>(read-only)</em> are returned by <code>GET /settings</code> but cannot be modified via <code>POST /settings</code>. Use dedicated endpoints (e.g., <code>/api/rtsp/apply-settings</code>, <code>/api/mqtt/apply-settings</code>) to update credentials.</p>
+            </div>
+        </section>
+
+        <section id="status">
+            <h2>Status & Capabilities</h2>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/status</span></h4>
+            <p>Current server and streaming status.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "clients": 2,
+  "wsClients": 1,
+  "streaming": true,
+  "cameraRunning": true,
+  "settings": { ... }
+}</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/capabilities</span></h4>
+            <p>Camera hardware capabilities.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "cameraIds": ["0", "1"],
+  "resolutions": ["1280x720", "1920x1080"],
+  "frameRates": [15, 20, 30, 60],
+  "maxFrameRate": 60
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/torch</span></h4>
+            <p>Toggle the device flashlight/torch.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -X POST -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://192.168.1.100:8443/torch"</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "torchEnabled": true
+}</pre>
+            </div>
+        </section>
+
+        <section id="rtsp">
+            <h2>RTSP Streaming</h2>
+            <p>H.264 video streaming compatible with VLC, ffmpeg, and security camera software.</p>
+
+            <div class="note">
+                <p><strong>Connection Limits:</strong></p>
+                <ul>
+                    <li>Maximum 10 concurrent connections globally</li>
+                    <li>Maximum 3 concurrent connections per IP address</li>
+                    <li>New connections are rejected when at capacity (no queueing)</li>
+                    <li>Rejected connections receive a 503 status in RTSP</li>
+                </ul>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/api/rtsp/status</span></h4>
+            <p>RTSP server status.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "enabled": true,
+  "running": true,
+  "port": 8554,
+  "path": "/stream",
+  "clients": 2
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/rtsp/start</span></h4>
+            <p>Start RTSP server.</p>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/rtsp/stop</span></h4>
+            <p>Stop RTSP server.</p>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/rtsp/restart</span></h4>
+            <p>Restart RTSP server with current settings.</p>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/rtsp/settings</span></h4>
+            <p>Update RTSP configuration.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Request</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "rtspPort": 8554,
+  "rtspPath": "/stream",
+  "rtspUsername": "admin",
+  "rtspPassword": "secret"
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/rtsp/apply-settings</span></h4>
+            <p>Apply new RTSP settings atomically and restart the server.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Request</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "rtspPort": 8554,
+  "rtspPath": "/stream",
+  "rtspUsername": "admin",
+  "rtspPassword": "secret"
+}</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true
+}</pre>
+            </div>
+
+            <h3>Connecting</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>ffmpeg</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>ffmpeg -rtsp_transport tcp -i rtsp://192.168.1.100:8554/stream -f null -</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>VLC</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>vlc rtsp://192.168.1.100:8554/stream</pre>
+            </div>
+        </section>
+
+        <section id="mqtt">
+            <h2>MQTT Integration</h2>
+            <p>Integrate with Home Assistant, Node-RED, and other MQTT-based automation systems.</p>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/api/mqtt/status</span></h4>
+            <p>MQTT client connection status.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "enabled": true,
+  "connected": true,
+  "brokerUrl": "192.168.1.100",
+  "port": 1883,
+  "topicPrefix": "ipcamera"
+}</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/api/mqtt/settings</span></h4>
+            <p>Get current MQTT settings (passwords redacted).</p>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/mqtt/settings</span></h4>
+            <p>Update MQTT configuration.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Request</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "mqttEnabled": true,
+  "mqttBrokerUrl": "192.168.1.100",
+  "mqttPort": 1883,
+  "mqttTopicPrefix": "ipcamera"
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/mqtt/test</span></h4>
+            <p>Test MQTT broker connection.</p>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/api/mqtt/apply-settings</span></h4>
+            <p>Apply MQTT settings with password verification. Requires the current password when modifying credentials.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Request</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "currentPassword": "existing_password",
+  "settings": {
+    "mqttEnabled": true,
+    "mqttBrokerUrl": "192.168.1.100",
+    "mqttPort": 1883,
+    "mqttUsername": "newuser",
+    "mqttPassword": "newpass",
+    "mqttClientId": "ipcamera-001",
+    "mqttTopicPrefix": "ipcamera",
+    "mqttUseTls": false,
+    "mqttAcceptSelfSigned": false,
+    "mqttTelemetryIntervalSec": 60,
+    "mqttCommandsEnabled": false
+  }
+}</pre>
+            </div>
+            <div class="note">
+                <p><strong>Note:</strong> <code>currentPassword</code> is only required when changing credentials (username, password) or disabling authentication. For non-credential settings, it can be omitted. First-time credential setup does not require verification.</p>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response (200 OK)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true
+}</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response (403 Forbidden)</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "error": "Current password required for credential changes"
+}</pre>
+            </div>
+        </section>
+
+        <section id="events">
+            <h2>Event History</h2>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/events</span></h4>
+            <p>Query detection events.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>limit</code></td><td>int</td><td>Max events (1-10000, default: 1000)</td></tr>
+                    <tr><td><code>since</code></td><td>long</td><td>Timestamp in ms (0 = start of today)</td></tr>
+                    <tr><td><code>type</code></td><td>string</td><td>MOTION, ANY_SOUND, DOG_BARK, etc.</td></tr>
+                    <tr><td><code>bucketMs</code></td><td>long</td><td>Aggregate events into time buckets (60000-3600000 ms)</td></tr>
+                </tbody>
+            </table>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://192.168.1.100:8443/events?since=0&type=MOTION"</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "serverNow": 1234567890000,
+  "dayStart": 1234483200000,
+  "events": [
+    {
+      "id": 1,
+      "eventId": 1001,
+      "timestamp": 1234567890000,
+      "type": "MOTION",
+      "changedPercent": 12.5,
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "id": 2,
+      "eventId": 1002,
+      "timestamp": 1234567891000,
+      "type": "ANY_SOUND",
+      "db": -25.5,
+      "rms": 0.45
+    },
+    {
+      "id": 3,
+      "eventId": 1003,
+      "timestamp": 1234567892000,
+      "type": "DOG_BARK",
+      "className": "Dog",
+      "confidence": 92
+    },
+    {
+      "id": 4,
+      "eventId": 1004,
+      "timestamp": 1234567893000,
+      "type": "OBJECT_PERSON",
+      "objectClass": "person",
+      "confidence": 85,
+      "eventType": "appeared"
+    }
+  ],
+  "summary": [
+    { "type": "MOTION", "count": 5, "lastTimestamp": 1234567890000 },
+    { "type": "ANY_SOUND", "count": 3, "lastTimestamp": 1234567891000 },
+    { "type": "DOG_BARK", "count": 2, "lastTimestamp": 1234567892000 },
+    { "type": "OBJECT_PERSON", "count": 1, "lastTimestamp": 1234567893000 }
+  ]
+}</pre>
+            </div>
+
+            <h3>Bucketed Queries</h3>
+            <p>When <code>bucketMs</code> is provided, the response format changes from individual events to aggregated buckets:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Bucketed Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "buckets": [
+    {
+      "timestamp": 1699200000000,
+      "counts": {
+        "MOTION": 5,
+        "ANY_SOUND": 3,
+        "DOG_BARK": 1
+      }
+    },
+    {
+      "timestamp": 1699200060000,
+      "counts": {
+        "MOTION": 2
+      }
+    }
+  ],
+  "bucketMs": 60000,
+  "timeRange": {
+    "start": 1699200000000,
+    "end": 1699203600000
+  }
+}</pre>
+            </div>
+            <div class="note">
+                <p><strong>Tip:</strong> Use bucketed queries for time-series analytics and event frequency charts.</p>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/events/range</span></h4>
+            <p>Get time range of stored events.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://192.168.1.100:8443/events/range"</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "minTimestamp": 1234567000000,
+  "maxTimestamp": 1234567890000,
+  "totalEvents": 1523
+}</pre>
+            </div>
+
+            <h4><span class="method method-post">POST</span><span class="endpoint">/events/clear</span></h4>
+            <p>Delete all stored events.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>confirm</code></td><td>string</td><td>Must be <code>true</code> (required for safety)</td></tr>
+                </tbody>
+            </table>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -X POST -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://192.168.1.100:8443/events/clear?confirm=true"</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": true,
+  "cleared": 1523
+}</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/api/storage/stats</span></h4>
+            <p>Get storage usage statistics for event history.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://192.168.1.100:8443/api/storage/stats"</pre>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Response</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "databaseSize": "2.5 MB",
+  "databaseSizeBytes": 2621440,
+  "totalEvents": 1990,
+  "motionEvents": 1200,
+  "soundEvents": 328,
+  "eventsByType": {
+    "MOTION": 1200,
+    "ANY_SOUND": 300,
+    "DOG_BARK": 23,
+    "BABY_CRY": 5,
+    "OBJECT_PERSON": 450,
+    "OBJECT_DOG": 12
+  },
+  "minTimestamp": 1234567000000,
+  "maxTimestamp": 1234567890000,
+  "deviceStorageTotal": "64.0 GB",
+  "deviceStorageAvailable": "32.5 GB",
+  "deviceStorageTotalBytes": 68719476736,
+  "deviceStorageAvailableBytes": 34896609280
+}</pre>
+            </div>
+
+            <h4><span class="method method-get">GET</span><span class="endpoint">/api/events/export</span></h4>
+            <p>Export all events as CSV. <span class="badge badge-pro">PRO</span></p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://192.168.1.100:8443/api/events/export" \
+  -o ip-camera-events.csv</pre>
+            </div>
+            <p><strong>Response:</strong> CSV file with columns: <code>id</code>, <code>type</code>, <code>timestamp</code>, <code>confidence</code>, <code>details</code>, <code>cameraId</code>, <code>resolution</code>, <code>frameRate</code>, <code>lightLevel</code>, <code>motionZones</code>, <code>thumbnailPath</code>, <code>metadata</code></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Body</th>
+                        <th>Cause</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>403</td><td><code>{"error":"Pro license required","feature":"event_export"}</code></td><td>Pro license not active</td></tr>
+                    <tr><td>500</td><td><code>Event history unavailable</code></td><td>Database not initialized</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="websocket">
+            <h2>WebSocket Protocol</h2>
+            <p>Real-time communication for live updates and control.</p>
+
+            <h3>Connection</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>WebSocket URL</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>wss://192.168.1.100:8443/ws?token=YOUR_TOKEN</pre>
+            </div>
+
+            <h3>Connection Lifecycle</h3>
+            <p>Upon successful WebSocket connection, the server sends a <code>connected</code> message:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Connected Message</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{"type": "connected", "authenticated": true, "timestamp": 1234567890000}</pre>
+            </div>
+
+            <p>Immediately after authentication, the server automatically sends a full state snapshot so the client has everything it needs without additional requests:</p>
+            <ol>
+                <li><code>status</code> &mdash; streaming state, detection state, and current settings</li>
+                <li><code>system_info</code> &mdash; CPU, memory, battery, and stream statistics</li>
+                <li><code>mqtt_status</code> &mdash; MQTT connection state (enabled, connected, broker info)</li>
+                <li><code>rtsp_status</code> &mdash; RTSP server state (enabled, running, client count)</li>
+            </ol>
+
+            <p>If authentication is required but no valid token was provided, the server sends:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>Auth Required Message</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{"type": "auth_required", "timestamp": 1234567890000}</pre>
+            </div>
+            <p>The client must respond with an <code>auth</code> message within 10 seconds.</p>
+
+            <h3>Client Messages</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>auth</code></td><td>WebSocket authentication with token</td></tr>
+                    <tr><td><code>ping</code></td><td>Keepalive (server responds with pong)</td></tr>
+                    <tr><td><code>setting</code></td><td>Update a single setting</td></tr>
+                    <tr><td><code>settings_batch</code></td><td>Update multiple settings</td></tr>
+                    <tr><td><code>capture</code></td><td>Trigger high-res capture</td></tr>
+                    <tr><td><code>enableH264</code></td><td>Enable H.264 stream</td></tr>
+                    <tr><td><code>requestKeyframe</code></td><td>Request H.264 keyframe</td></tr>
+                    <tr><td><code>h264_quality</code></td><td>Adjust H.264 encoding quality (0-100)</td></tr>
+                    <tr><td><code>stream_control</code></td><td>Start/stop streaming</td></tr>
+                    <tr><td><code>audio_subscribe</code></td><td>Subscribe to audio stream (Two-Way Audio)</td></tr>
+                    <tr><td><code>audio</code></td><td>Send audio data to device (Two-Way Audio)</td></tr>
+                    <tr><td><code>tts</code></td><td>Text-to-speech on device (Two-Way Audio)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Server Messages</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>connected</code></td><td>Initial connection confirmation</td></tr>
+                    <tr><td><code>auth_required</code></td><td>Authentication needed prompt</td></tr>
+                    <tr><td><code>auth</code></td><td>Authentication success/failure response</td></tr>
+                    <tr><td><code>error</code></td><td>Error message with code and details</td></tr>
+                    <tr><td><code>pong</code></td><td>Response to ping keepalive</td></tr>
+                    <tr><td><code>settings</code></td><td>Settings changed (broadcast)</td></tr>
+                    <tr><td><code>setting_ack</code></td><td>Single setting update acknowledgment</td></tr>
+                    <tr><td><code>settings_batch_ack</code></td><td>Batch settings update acknowledgment</td></tr>
+                    <tr><td><code>status</code></td><td>Streaming status update</td></tr>
+                    <tr><td><code>system_info</code></td><td>Device info (CPU, memory, battery)</td></tr>
+                    <tr><td><code>h264_ack</code></td><td>H.264 enable acknowledgment</td></tr>
+                    <tr><td><code>motion_detected</code></td><td>Motion event</td></tr>
+                    <tr><td><code>sound_detected</code></td><td>Sound event</td></tr>
+                    <tr><td><code>sound_classified</code></td><td>Dog bark classified</td></tr>
+                    <tr><td><code>baby_cry_classified</code></td><td>Baby cry classified</td></tr>
+                    <tr><td><code>object_detected</code></td><td>Person/dog detected</td></tr>
+                    <tr><td><code>detection_frame</code></td><td>All tracked objects in frame</td></tr>
+                    <tr><td><code>capture_ready</code></td><td>High-res capture available</td></tr>
+                    <tr><td><code>capture_busy</code></td><td>Capture already in progress</td></tr>
+                    <tr><td><code>mqtt_status</code></td><td>MQTT connection state</td></tr>
+                    <tr><td><code>rtsp_status</code></td><td>RTSP server state</td></tr>
+                    <tr><td><code>license:changed</code></td><td>Pro license status change</td></tr>
+                    <tr><td><code>capabilitiesChanged</code></td><td>Camera capabilities changed</td></tr>
+                    <tr><td><code>audio_ack</code></td><td>Audio subscribe acknowledgment</td></tr>
+                    <tr><td><code>audio</code></td><td>Audio data from device (Two-Way Audio)</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Example: Auth Message</h4>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{"type": "auth", "token": "your_auth_token"}</pre>
+            </div>
+
+            <h4>Example: Update Setting</h4>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{"type": "setting", "key": "resolution", "value": "1920x1080"}</pre>
+            </div>
+
+            <h4>Example: Error Response</h4>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{"type": "error", "message": "Authentication required"}</pre>
+            </div>
+        </section>
+
+        <section id="errors">
+            <h2>Error Handling</h2>
+
+            <h3>HTTP Status Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Meaning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>400</td><td>Invalid request (bad JSON, missing fields)</td></tr>
+                    <tr><td>401</td><td>Authentication required or invalid token</td></tr>
+                    <tr><td>403</td><td>Forbidden (Pro required, HTTPS required)</td></tr>
+                    <tr><td>429</td><td>Rate limit exceeded</td></tr>
+                    <tr><td>500</td><td>Server error</td></tr>
+                    <tr><td>503</td><td>Service unavailable (camera not started)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Error Response Format</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{"error": "Description of the error"}</pre>
+            </div>
+
+            <h3>Pro Feature Error (403)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "error": "Pro license required",
+  "feature": "rtsp_streaming",
+  "hint": "Access this feature through the web dashboard or upgrade to Pro"
+}</pre>
+            </div>
+            <p>The <code>feature</code> field identifies which Pro feature was requested:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature ID</th>
+                        <th>Endpoints/Features</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>rtsp_streaming</code></td><td>/api/rtsp/* endpoints</td></tr>
+                    <tr><td><code>mqtt_integration</code></td><td>/api/mqtt/* endpoints</td></tr>
+                    <tr><td><code>event_history</code></td><td>/events, /events/range, /events/clear</td></tr>
+                    <tr><td><code>event_export</code></td><td>/api/events/export</td></tr>
+                    <tr><td><code>storage_analytics</code></td><td>/api/storage/stats</td></tr>
+                    <tr><td><code>certificate_download</code></td><td>/cert</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Settings Validation Error (400)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": false,
+  "errors": [
+    "unknownKey: Unknown setting",
+    "frameRate: Value must be between 1 and 60"
+  ]
+}</pre>
+            </div>
+            <p>The <code>errors</code> array lists all validation failures. Each entry follows the format <code>key: message</code>.</p>
+
+            <h3>Auth Lockout Error (429)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "success": false,
+  "error": "Too many attempts",
+  "lockout": true,
+  "lockoutRemaining": 30
+}</pre>
+            </div>
+            <p>After 5 failed login attempts, the account is locked for 30 seconds. The <code>lockoutRemaining</code> field shows seconds until retry is allowed.</p>
+
+            <h3>Certificate</h3>
+            <p>Download the self-signed certificate to eliminate browser warnings:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>curl</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>curl -k https://192.168.1.100:8443/cert -o ipcamera.pem</pre>
+            </div>
+        </section>
+
+        <footer>
+            <p>IP Camera API Reference | <a href="https://play.google.com/store/apps/details?id=com.landofoz.ipcamera">Google Play</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Copy button functionality
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const codeBlock = btn.closest('.code-block');
+                const pre = codeBlock.querySelector('pre');
+                const text = pre.textContent;
+
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 1500);
+                });
+            });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

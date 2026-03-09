@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - IP Camera</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --accent: #22c55e;
+            --accent-secondary: #4a90d9;
+            --border: #e0e0e0;
+            --code-bg: #f5f5f5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .top-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .top-nav a:hover {
+            color: var(--accent);
+        }
+
+        header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main content */
+        main h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        main h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        main h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        main p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        main ul, main ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        main li {
+            margin-bottom: 0.5rem;
+        }
+
+        main strong {
+            color: var(--text-primary);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        td {
+            color: var(--text-secondary);
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            font-family: 'SF Mono', Monaco, 'Andale Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'SF Mono', Monaco, 'Andale Mono', monospace;
+            font-size: 0.9em;
+            background: var(--code-bg);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* Blockquotes (screenshot placeholders) */
+        blockquote {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 4px 4px 0;
+            color: #856404;
+            font-size: 0.875rem;
+        }
+
+        /* Horizontal rules */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        /* Links */
+        a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Pro feature badges */
+        h3:has(+ p:first-of-type),
+        h2:has(+ p:first-of-type) {
+            position: relative;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--text-secondary);
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            main h2 {
+                font-size: 1.25rem;
+            }
+
+            main h3 {
+                font-size: 1.1rem;
+            }
+
+            table {
+                font-size: 0.875rem;
+            }
+
+            th, td {
+                padding: 0.5rem 0.75rem;
+            }
+
+            pre {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="top-nav">
+            <a href="../">&larr; Home</a>
+            <a href="../api/">API Docs</a>
+            <a href="../privacy/">Privacy</a>
+        </nav>
+
+        <header>
+            <h1>IP Camera User Guide</h1>
+            <p class="subtitle">Complete guide to the IP Camera Android app and web dashboard.</p>
+        </header>
+
+        <main>
+<h1 id="user-guide">User Guide</h1>
+<p>This guide covers the IP Camera Android app and its web
+dashboard.</p>
+<hr />
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="installation-permissions">Installation &amp; Permissions</h3>
+<ol type="1">
+<li>Install the app from Google Play</li>
+<li>Grant permissions when prompted:
+<ul>
+<li><strong>Camera</strong> - required for video</li>
+<li><strong>Microphone</strong> - required for audio and sound
+detection</li>
+<li><strong>Notifications</strong> - required for foreground
+service</li>
+</ul></li>
+<li>Optional: Grant battery optimization exemption when prompted
+(recommended for 24/7 reliability)</li>
+</ol>
+<h3 id="starting-the-server">Starting the Server</h3>
+<ol type="1">
+<li>Open the app — the web server starts automatically</li>
+<li>Note the URL displayed (e.g.,
+<code>https://192.168.1.100:8443</code>)</li>
+</ol>
+<blockquote>
+<p>INSERT APP_MAIN_SCREEN SCREENSHOT</p>
+</blockquote>
+<h3 id="viewing-the-stream">Viewing the Stream</h3>
+<ol type="1">
+<li>On another device connected to the same WiFi network, open a
+browser</li>
+<li>Enter the URL shown in the app</li>
+<li>Accept the certificate warning (click “Advanced” → “Proceed”)</li>
+<li>Click <strong>Start Stream</strong> on the dashboard to begin
+viewing</li>
+</ol>
+<blockquote>
+<p>INSERT CERTIFICATE_WARNING SCREENSHOT</p>
+</blockquote>
+<h3 id="pro-features">Pro Features</h3>
+<p>Most features require a Pro license: - <strong>Motion
+Detection</strong> - any motion, person detection, dog detection -
+<strong>Sound Detection</strong> - any sound, dog bark, baby cry -
+<strong>Two-Way Audio</strong> - push-to-talk and text-to-speech -
+<strong>Activity History</strong> - event timeline and analytics charts
+- <strong>RTSP Streaming</strong> - stream to VLC, ffmpeg, or NVR
+systems - <strong>MQTT Integration</strong> - publish events to Home
+Assistant, Node-RED - <strong>API Documentation</strong> - interactive
+reference for developers - <strong>Certificate Download</strong> -
+install HTTPS certificate permanently - <strong>Reverse Proxy
+Mode</strong> - access camera through nginx, Caddy, or CloudFlare</p>
+<p>Free features: live video streaming via web dashboard and camera
+controls (resolution, FPS, rotation, torch).</p>
+<hr />
+<h2 id="android-app">Android App</h2>
+<p>The Android app runs on the phone and acts as the camera server.</p>
+<blockquote>
+<p>INSERT APP_MAIN_SCREEN_ANNOTATED SCREENSHOT</p>
+</blockquote>
+<h3 id="main-screen">Main Screen</h3>
+<p>The main screen shows: - <strong>Stream URL</strong> - the address to
+access the dashboard - <strong>Status</strong> - current streaming state
+and viewer count - <strong>Control buttons</strong> - camera,
+resolution, FPS, rotation, torch</p>
+<p><strong>Quick Controls (tap to change):</strong> -
+<strong>Camera</strong> - switch between front/back camera -
+<strong>Resolution</strong> - change video resolution -
+<strong>FPS</strong> - change frame rate (tap the speedometer icon) -
+<strong>Rotation</strong> - rotate video orientation -
+<strong>Torch</strong> - toggle flashlight (if available)</p>
+<h3 id="status-overlay">Status Overlay</h3>
+<p>The status overlay appears on the live preview showing system health.
+Tap to expand for full details.</p>
+<p><strong>Information displayed:</strong> - Connection status (Web,
+RTSP, MQTT, Audio listeners) - System metrics (CPU, Memory, Battery,
+Temperature) - Detection subsystem status (6 colored dots)</p>
+<p><strong>Status States:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>State</th>
+<th>Color</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>STANDBY</td>
+<td>Blue</td>
+<td>Server running, no viewers</td>
+</tr>
+<tr class="even">
+<td>ACTIVE</td>
+<td>Green</td>
+<td>Streaming, viewers connected</td>
+</tr>
+<tr class="odd">
+<td>WARNING</td>
+<td>Orange</td>
+<td>Battery ≤20% (unplugged) or temperature ≥45°C</td>
+</tr>
+<tr class="even">
+<td>CRITICAL</td>
+<td>Red</td>
+<td>Battery ≤15% (unplugged)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="app-settings">App Settings</h3>
+<p>Access settings via the gear icon or menu.</p>
+<blockquote>
+<p>INSERT APP_SETTINGS_SCREEN SCREENSHOT</p>
+</blockquote>
+<p><strong>Power &amp; Performance:</strong></p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Keep Screen On</td>
+<td>Prevents screen from sleeping (uses more battery)</td>
+</tr>
+<tr class="even">
+<td>Run in Background</td>
+<td>Keeps streaming when app is minimized or screen turns off. When
+enabled, the app automatically moves to the background when the screen
+turns off, so you see your home screen when unlocking (appliance
+mode)</td>
+</tr>
+<tr class="odd">
+<td>Auto-start on Boot</td>
+<td>Starts the service when device powers on. <strong>Android
+14+:</strong> Tap the notification to resume streaming after reboot (see
+FAQ)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Security:</strong></p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Password</td>
+<td>Protect dashboard and API access with a password</td>
+</tr>
+<tr class="even">
+<td>Certificate</td>
+<td>Download the HTTPS certificate for installation (Pro feature)</td>
+</tr>
+<tr class="odd">
+<td>Crash Reporting</td>
+<td>Send anonymous crash reports to help fix bugs (enabled by
+default)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dashboard Authentication Details:</strong> - Sessions use
+tokens valid for 7 days - Rate limiting: 5 failed attempts triggers
+30-second lockout</p>
+<p><strong>Network:</strong></p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Reverse Proxy Mode</td>
+<td>Trust X-Forwarded-Proto from proxy for HTTPS detection (Pro
+feature)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Audio can be enabled/disabled via the Camera
+Settings panel in the web dashboard.</p>
+<hr />
+<h2 id="web-dashboard">Web Dashboard</h2>
+<p>The web dashboard is accessed via a browser and provides full control
+over the camera. It has five pages accessible via the navigation tabs
+(desktop) or hamburger menu (mobile).</p>
+<blockquote>
+<p>INSERT DASHBOARD_NAVIGATION SCREENSHOT</p>
+</blockquote>
+<hr />
+<h3 id="dashboard-page">Dashboard Page</h3>
+<p>The main page for viewing the live stream and configuring
+detection.</p>
+<blockquote>
+<p>INSERT DASHBOARD_PAGE_OVERVIEW SCREENSHOT</p>
+</blockquote>
+<h4 id="live-video">Live Video</h4>
+<p>The video stream appears at the top of the page with status
+information below: - Stream status (Buffering, Streaming, or error) -
+Resolution and frame rate - Bitrate and viewer count</p>
+<p><strong>Controls:</strong> - <strong>Fullscreen</strong> - expand
+video to full screen - <strong>Snapshot</strong> - capture a still image
+(downloads as JPEG)</p>
+<blockquote>
+<p>INSERT LIVE_VIDEO_SECTION SCREENSHOT</p>
+</blockquote>
+<h4 id="camera-settings">Camera Settings</h4>
+<p>Click to expand. Changes take effect immediately.</p>
+<blockquote>
+<p>INSERT CAMERA_SETTINGS_PANEL SCREENSHOT</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Camera</td>
+<td>Switch between back and front cameras</td>
+</tr>
+<tr class="even">
+<td>Resolution</td>
+<td>Video resolution (higher = better quality, more CPU)</td>
+</tr>
+<tr class="odd">
+<td>Frame Rate</td>
+<td>Frames per second</td>
+</tr>
+<tr class="even">
+<td>Quality</td>
+<td>JPEG/H.264 quality level (1-100)</td>
+</tr>
+<tr class="odd">
+<td>Rotation</td>
+<td>Rotate video 0°, 90°, 180°, or 270°</td>
+</tr>
+<tr class="even">
+<td>Audio</td>
+<td>Enable/disable microphone audio</td>
+</tr>
+<tr class="odd">
+<td>H.264</td>
+<td>Use H.264 encoding instead of MJPEG (lower CPU and bandwidth)</td>
+</tr>
+<tr class="even">
+<td>Torch</td>
+<td>Turn on flashlight (if available)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Camera Capabilities:</strong> - <strong>Resolutions:</strong>
+Up to 1920x1080 (1080p). Options depend on device. - <strong>Frame
+Rate:</strong> 1-60 fps. Older (LEGACY) devices capped at 15 fps for
+stability. - <strong>Quality:</strong> 1-100 quality level. Lower =
+smaller files, higher = better quality. - <strong>Automatic
+Controls:</strong> Autofocus, exposure, and white balance are always
+automatic. - <strong>Zoom:</strong> Not available.</p>
+<h4 id="two-way-audio-pro-feature">Two-Way Audio [Pro Feature]</h4>
+<p>Click to expand. Allows you to speak through the camera.</p>
+<blockquote>
+<p>INSERT TWO_WAY_AUDIO_PANEL SCREENSHOT</p>
+</blockquote>
+<p><strong>Push to Talk:</strong> Press and hold the button, speak, then
+release. Your voice plays through the phone’s speaker.</p>
+<p><strong>Text to Speech:</strong> Type a message and click Speak. The
+phone reads it aloud. Messages are rate-limited to one per 5
+seconds.</p>
+<p><strong>Note:</strong> PTT requires HTTPS (browser security
+requirement). PTT and TTS require Pro; listening is free.</p>
+<h4 id="motion-detection-pro-feature">Motion Detection [Pro
+Feature]</h4>
+<p>Click to expand. Configure motion-based alerts.</p>
+<blockquote>
+<p>INSERT MOTION_DETECTION_PANEL SCREENSHOT</p>
+</blockquote>
+<p><strong>Detection types:</strong> - <strong>Any Motion</strong> -
+triggers on pixel changes - <strong>Person</strong> - AI detection of
+humans - <strong>Dog</strong> - AI detection of dogs</p>
+<p><strong>Settings:</strong> - <strong>Sensitivity</strong> - how
+easily motion triggers (1 = large movements only, 10 = very sensitive) -
+<strong>Cooldown</strong> - minimum seconds between alerts -
+<strong>Confidence</strong> - for AI detection, how certain the model
+must be - <strong>Show Boxes</strong> - display bounding boxes around
+detected objects</p>
+<h4 id="sound-detection-pro-feature">Sound Detection [Pro Feature]</h4>
+<p>Click to expand. Configure audio-based alerts.</p>
+<blockquote>
+<p>INSERT SOUND_DETECTION_PANEL SCREENSHOT</p>
+</blockquote>
+<p><strong>Detection types:</strong> - <strong>Any Sound</strong> -
+triggers on volume threshold - <strong>Dog Bark</strong> - AI
+classification - <strong>Baby Cry</strong> - AI classification</p>
+<p><strong>Settings:</strong> - <strong>Threshold</strong> - for Any
+Sound, how loud before triggering (1 = loud only, 10 = very sensitive) -
+<strong>Cooldown</strong> - minimum seconds between alerts -
+<strong>Confidence</strong> - for AI detection, how certain the model
+must be</p>
+<h4 id="activity-timeline-pro-feature">Activity Timeline [Pro
+Feature]</h4>
+<p>Shows a visual summary of today’s detection events.</p>
+<blockquote>
+<p>INSERT ACTIVITY_TIMELINE SCREENSHOT</p>
+</blockquote>
+<ul>
+<li>Each row is a detection type</li>
+<li>Colored blocks show when activity occurred</li>
+<li>Darker blocks = more events</li>
+</ul>
+<hr />
+<h3 id="rtsp-page-pro-feature">RTSP Page [Pro Feature]</h3>
+<p>Configure RTSP streaming for use with VLC, ffmpeg, or NVR
+systems.</p>
+<blockquote>
+<p>INSERT RTSP_PAGE SCREENSHOT</p>
+</blockquote>
+<h4 id="server-settings">Server Settings</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Enabled</td>
+<td>Off</td>
+<td>Turn RTSP server on/off</td>
+</tr>
+<tr class="even">
+<td>Port</td>
+<td>8554</td>
+<td>Server port</td>
+</tr>
+<tr class="odd">
+<td>Stream Path</td>
+<td>/stream</td>
+<td>URL path</td>
+</tr>
+<tr class="even">
+<td>Authentication</td>
+<td>Off</td>
+<td>Require username/password</td>
+</tr>
+</tbody>
+</table>
+<h4 id="stream-url">Stream URL</h4>
+<p>The page displays the full URL to use:</p>
+<pre><code>rtsp://192.168.1.100:8554/stream</code></pre>
+<h4 id="connecting-with-players">Connecting with Players</h4>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># VLC</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">vlc</span> <span class="at">--rtsp-tcp</span> rtsp://192.168.1.100:8554/stream</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ffplay</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">ffplay</span> <span class="at">-rtsp_transport</span> tcp rtsp://192.168.1.100:8554/stream</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># With authentication</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ex">vlc</span> <span class="at">--rtsp-tcp</span> rtsp://user:pass@192.168.1.100:8554/stream</span></code></pre></div>
+<p><strong>Important:</strong> Always use TCP transport
+(<code>--rtsp-tcp</code> or <code>-rtsp_transport tcp</code>).</p>
+<h4 id="limitations">Limitations</h4>
+<ul>
+<li>Video only (no audio)</li>
+<li>Maximum 3 connections per IP address</li>
+<li>Unencrypted - use only on trusted networks</li>
+</ul>
+<p><strong>RTSP Authentication Details:</strong> - Uses HTTP Basic
+authentication (credentials Base64-encoded, not encrypted) - Video
+stream is always unencrypted regardless of auth setting - Rate limiting:
+5 failed attempts triggers 60-second lockout - Only use on trusted
+networks or behind a VPN</p>
+<hr />
+<h3 id="mqtt-page-pro-feature">MQTT Page [Pro Feature]</h3>
+<p>Configure MQTT for integration with Home Assistant, Node-RED, or
+other IoT platforms.</p>
+<blockquote>
+<p>INSERT MQTT_PAGE SCREENSHOT</p>
+</blockquote>
+<h4 id="connection-settings">Connection Settings</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Enabled</td>
+<td>Turn MQTT on/off</td>
+</tr>
+<tr class="even">
+<td>Broker URL</td>
+<td>IP address or hostname of your broker</td>
+</tr>
+<tr class="odd">
+<td>Port</td>
+<td>Default 1883 (or 8883 for TLS)</td>
+</tr>
+<tr class="even">
+<td>Use TLS</td>
+<td>Enable encrypted connection</td>
+</tr>
+<tr class="odd">
+<td>Username/Password</td>
+<td>Broker authentication (if required)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>MQTT Security:</strong> - Credentials are stored encrypted on
+device (AES-256) - Enable TLS when using authentication to protect
+credentials in transit - Remote commands are disabled by default for
+security</p>
+<h4 id="published-topics">Published Topics</h4>
+<p>All topics use a configurable prefix (default:
+<code>ipcamera</code>):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>{prefix}/status/online</code></td>
+<td>Online/offline state (LWT)</td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/events/motion</code></td>
+<td>Motion detected</td>
+</tr>
+<tr class="odd">
+<td><code>{prefix}/events/sound</code></td>
+<td>Sound threshold exceeded</td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/events/vision/person</code></td>
+<td>Person detected (ML)</td>
+</tr>
+<tr class="odd">
+<td><code>{prefix}/events/vision/dog</code></td>
+<td>Dog detected (ML)</td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/events/sound/dog_bark</code></td>
+<td>Dog bark detected (ML)</td>
+</tr>
+<tr class="odd">
+<td><code>{prefix}/events/sound/baby_cry</code></td>
+<td>Baby cry detected (ML)</td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/telemetry/system</code></td>
+<td>CPU, temperature, battery</td>
+</tr>
+</tbody>
+</table>
+<h4 id="control-topics">Control Topics</h4>
+<p>When enabled, the app subscribes to control topics for remote
+enable/disable of detection features:</p>
+<table>
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Topic</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>{prefix}/control/motion/enabled</code></td>
+<td><code>{"enabled": true}</code> or <code>"true"</code></td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/control/sound/enabled</code></td>
+<td><code>{"enabled": true}</code> or <code>"true"</code></td>
+</tr>
+<tr class="odd">
+<td><code>{prefix}/control/vision/person/enabled</code></td>
+<td><code>{"enabled": true}</code> or <code>"true"</code></td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/control/vision/dog/enabled</code></td>
+<td><code>{"enabled": true}</code> or <code>"true"</code></td>
+</tr>
+<tr class="odd">
+<td><code>{prefix}/control/classification/dog_bark/enabled</code></td>
+<td><code>{"enabled": true}</code> or <code>"true"</code></td>
+</tr>
+<tr class="even">
+<td><code>{prefix}/control/classification/baby_cry/enabled</code></td>
+<td><code>{"enabled": true}</code> or <code>"true"</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> Control topics are disabled by default for
+security. Torch and snapshot are HTTP-only (<code>/torch</code>,
+<code>/snapshot</code>).</p>
+<hr />
+<h3 id="activity-page-pro-feature">Activity Page [Pro Feature]</h3>
+<p>View detection event history and analytics.</p>
+<blockquote>
+<p>INSERT ACTIVITY_PAGE SCREENSHOT</p>
+</blockquote>
+<h4 id="time-range">Time Range</h4>
+<p>Select a time range using: - Quick presets: Today, Yesterday, 7 Days,
+30 Days, All Time - Date picker for custom range - Arrow buttons to move
+forward/backward</p>
+<h4 id="filtering">Filtering</h4>
+<p>Click filter chips to show specific event types: - All events -
+Motion events (Any, Person, Dog) - Sound events (Any, Dog Bark, Baby
+Cry)</p>
+<h4 id="statistics">Statistics</h4>
+<p>Cards showing: - Total motion events - Total sound events - Peak
+activity hour - Total events</p>
+<h4 id="charts">Charts</h4>
+<ul>
+<li><strong>Activity Over Time</strong> - line chart showing event
+counts over the selected period</li>
+<li><strong>Hourly Breakdown</strong> - bar chart of events by hour
+(24-hour view)</li>
+<li><strong>Today vs Yesterday</strong> - comparison bar chart</li>
+<li><strong>Event Types</strong> - donut chart showing distribution of
+detection types</li>
+<li><strong>Detection Quality</strong> - histogram of motion intensity
+or AI confidence scores</li>
+</ul>
+<h4 id="export-pro-feature">Export [Pro Feature]</h4>
+<p>Click <strong>Export</strong> to download events as CSV.</p>
+<hr />
+<h3 id="api-page-pro-feature">API Page [Pro Feature]</h3>
+<p>Interactive API documentation for developers integrating with the
+camera.</p>
+<blockquote>
+<p>INSERT API_PAGE SCREENSHOT</p>
+</blockquote>
+<h4 id="categories">Categories</h4>
+<ul>
+<li><strong>Authentication</strong> - login, logout, token
+management</li>
+<li><strong>Streaming</strong> - MJPEG stream, snapshot, high-res
+capture</li>
+<li><strong>Settings</strong> - read and write camera configuration</li>
+<li><strong>WebSocket</strong> - real-time events and H.264
+streaming</li>
+<li><strong>RTSP &amp; MQTT</strong> - integration endpoints</li>
+</ul>
+<h4 id="usage">Usage</h4>
+<p>The page provides curl examples for each endpoint. Authentication is
+required when password protection is enabled.</p>
+<hr />
+<h2 id="embedding">Embedding</h2>
+<h3 id="mjpeg-stream">MJPEG Stream</h3>
+<p>Embed the video stream in a web page:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span> <span class="er">src</span><span class="ot">=</span><span class="st">&quot;https://192.168.1.100:8443/stream&quot;</span> <span class="dt">/&gt;</span></span></code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="stream-wont-load">Stream Won’t Load</h3>
+<ol type="1">
+<li>Check you’re on the same WiFi network as the phone</li>
+<li>Verify the IP address (it changes when the phone reconnects to
+WiFi)</li>
+<li>Make sure streaming is started in the app</li>
+<li>Check no other app is using the camera</li>
+</ol>
+<h3 id="certificate-warning">Certificate Warning</h3>
+<p>This is normal. The app uses a self-signed certificate. Click
+“Advanced” → “Proceed” to continue, or download and install the
+certificate from the app settings for a permanent fix.</p>
+<h3 id="video-lag">Video Lag</h3>
+<ul>
+<li>Move closer to your WiFi router</li>
+<li>Lower the resolution</li>
+<li>Lower the frame rate</li>
+<li>Switch to H.264 (uses less bandwidth than MJPEG)</li>
+</ul>
+<h3 id="phone-overheating">Phone Overheating</h3>
+<p>The app automatically reduces frame rate when the phone gets hot: -
+38°C+ → 15 fps max - 42°C+ → 10 fps max - 48°C+ → 5 fps max</p>
+<p>To reduce heat manually: - Lower resolution and frame rate - Use
+H.264 instead of MJPEG - Keep phone in a ventilated area - Avoid direct
+sunlight</p>
+<h3 id="detection-issues">Detection Issues</h3>
+<p><strong>Too many false alerts:</strong> - Lower motion sensitivity -
+Lower sound threshold - Increase AI confidence</p>
+<p><strong>Not detecting:</strong> - Increase motion sensitivity -
+Increase sound threshold - Decrease AI confidence</p>
+<p><strong>Detection stopped working:</strong> The app auto-disables
+detection after 5 consecutive ML inference failures to prevent battery
+drain. A toast notification appears when this happens. To re-enable: 1.
+Go to the detection panel 2. Toggle the detection type off and back on
+3. If failures persist, restart the app</p>
+<h3 id="rtsp-wont-connect">RTSP Won’t Connect</h3>
+<ol type="1">
+<li>Check RTSP is enabled on the RTSP page</li>
+<li>Use TCP transport (<code>--rtsp-tcp</code>)</li>
+<li>Verify the port (default 8554)</li>
+<li>Check authentication credentials if enabled</li>
+<li><strong>Android 14+ after reboot:</strong> Tap the notification or
+open the app to unlock camera access (see FAQ)</li>
+</ol>
+<h3 id="remote-access">Remote Access</h3>
+<p>The app works on your local network by default. For remote access,
+you have two options:</p>
+<ol type="1">
+<li><strong>VPN</strong> - Connect to your home network via VPN, then
+access the camera normally</li>
+<li><strong>Reverse Proxy</strong> - Set up a TLS-terminating reverse
+proxy (nginx, Caddy, etc.) with proper authentication, then enable
+“Reverse Proxy Mode” in app settings so the app trusts the proxy’s
+X-Forwarded-Proto header (required for secure cookies to work
+correctly)</li>
+</ol>
+<p><strong>Do not port-forward the camera directly to the
+internet</strong> - use a reverse proxy with authentication instead.</p>
+<hr />
+<h2 id="faq">FAQ</h2>
+<p><strong>How many viewers can connect?</strong> No practical limit.
+Each viewer has an independent queue.</p>
+<p><strong>Does it record video?</strong> No. Use an NVR with RTSP to
+record.</p>
+<p><strong>Can I use multiple cameras?</strong> Run the app on multiple
+phones. Each phone is one camera.</p>
+<p><strong>Why does the IP address change?</strong> Your router assigns
+dynamic IPs. You can reserve a static IP in your router settings.</p>
+<p><strong>Does it work when the phone is locked?</strong> Yes, if “Run
+in Background” is enabled. The app will continue streaming even with the
+screen off. Additionally, when you lock the phone, the app automatically
+moves to the background so you see your home screen when you unlock
+(appliance mode).</p>
+<p><strong>Does it need internet?</strong> No. Only local WiFi is
+required.</p>
+<p><strong>Why request battery optimization exemption?</strong> Without
+it, Android may kill the app to save battery, stopping your stream.</p>
+<p><strong>Why doesn’t auto-start work fully on Android 14+?</strong>
+Android 14 introduced stricter security for camera and microphone
+access. After a reboot, the app shows a “Tap to resume streaming”
+notification. Simply tap the notification to enable camera/mic features
+(streaming, RTSP, detection) - no need to open the full app.
+Alternatively, open the app normally to unlock full functionality. This
+is an Android platform restriction, not an app limitation.</p>
+<p><strong>Can I zoom the camera?</strong> No. Digital zoom is not
+implemented.</p>
+<p><strong>What’s the difference between listening and PTT?</strong>
+Listening plays device audio (phone’s mic) through your browser.
+Push-to-Talk transmits your voice to the phone’s speaker. Both require
+Pro.</p>
+<p><strong>Why did detection stop automatically?</strong> After 5
+consecutive ML inference failures, detection auto-disables to save
+battery. Re-enable it in the dashboard detection panel.</p>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 IP Camera</p>
+            <div class="footer-links">
+                <a href="../privacy/">Privacy Policy</a>
+                <a href="../api/">API Documentation</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

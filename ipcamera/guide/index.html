@@ -54,7 +54,7 @@
         }
 
         header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
             border-bottom: 1px solid var(--border);
         }
@@ -71,31 +71,90 @@
             color: var(--text-secondary);
         }
 
+        /* Table of Contents */
+        .toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .toc-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .toc-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+        }
+
+        .toc-links a {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0.25rem 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .toc-links a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            text-decoration: none;
+        }
+
         /* Main content */
         main h2 {
             font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-primary);
-            margin-top: 2.5rem;
+            margin-top: 3rem;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent);
+            padding: 0.75rem 1rem;
+            background: linear-gradient(90deg, var(--accent) 4px, var(--bg-secondary) 4px);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        main h2:first-child {
+            margin-top: 0;
         }
 
         main h3 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
             color: var(--text-primary);
             margin-top: 2rem;
             margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
         }
 
         main h4 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--accent);
             margin-top: 1.5rem;
             margin-bottom: 0.5rem;
+        }
+
+        /* Back to top link */
+        .back-to-top {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .back-to-top:hover {
+            color: var(--accent);
         }
 
         main p {
@@ -189,11 +248,9 @@
             font-size: 0.875rem;
         }
 
-        /* Horizontal rules */
+        /* Hide horizontal rules - h2 sections provide visual breaks */
         hr {
-            border: none;
-            border-top: 1px solid var(--border);
-            margin: 2rem 0;
+            display: none;
         }
 
         /* Links */
@@ -237,6 +294,51 @@
             margin-top: 0.5rem;
         }
 
+        /* Collapsible FAQ */
+        details {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        details summary {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: #f9f9f9;
+            list-style: none;
+        }
+
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details summary::before {
+            content: "▶";
+            display: inline-block;
+            margin-right: 0.5rem;
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        details[open] summary {
+            border-bottom: 1px solid var(--border);
+        }
+
+        details > p,
+        details > div {
+            padding: 1rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
         /* Responsive */
         @media (max-width: 600px) {
             .container {
@@ -247,12 +349,22 @@
                 font-size: 1.5rem;
             }
 
+            .toc {
+                padding: 1rem;
+            }
+
+            .toc-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
             main h2 {
-                font-size: 1.25rem;
+                font-size: 1.15rem;
+                padding: 0.6rem 0.75rem;
             }
 
             main h3 {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
 
             table {
@@ -277,16 +389,24 @@
             <a href="../privacy/">Privacy</a>
         </nav>
 
-        <header>
+        <header id="top">
             <h1>IP Camera User Guide</h1>
             <p class="subtitle">Complete guide to the IP Camera Android app and web dashboard.</p>
         </header>
 
+        <nav class="toc">
+            <div class="toc-title">Jump to section</div>
+            <div class="toc-links">
+                <a href="#quick-start">Quick Start</a>
+                <a href="#android-app">Android App</a>
+                <a href="#web-dashboard">Web Dashboard</a>
+                <a href="#embedding">Embedding</a>
+                <a href="#troubleshooting">Troubleshooting</a>
+                <a href="#faq">FAQ</a>
+            </div>
+        </nav>
+
         <main>
-<h1 id="user-guide">User Guide</h1>
-<p>This guide covers the IP Camera Android app and its web
-dashboard.</p>
-<hr />
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="installation-permissions">Installation &amp; Permissions</h3>
 <ol type="1">
@@ -318,39 +438,90 @@ browser</li>
 viewing</li>
 </ol>
 <h3 id="pro-features">Pro Features</h3>
-<p>Most features require a Pro license: - <strong>Motion
-Detection</strong> - any motion, person detection, dog detection -
-<strong>Sound Detection</strong> - any sound, dog bark, baby cry -
-<strong>Two-Way Audio</strong> - push-to-talk and text-to-speech -
-<strong>Activity History</strong> - event timeline and analytics charts
-- <strong>RTSP Streaming</strong> - stream to VLC, ffmpeg, or NVR
-systems - <strong>MQTT Integration</strong> - publish events to Home
-Assistant, Node-RED - <strong>API Documentation</strong> - interactive
-reference for developers - <strong>Certificate Download</strong> -
-install HTTPS certificate permanently - <strong>Reverse Proxy
-Mode</strong> - access camera through nginx, Caddy, or CloudFlare</p>
+<p>Most features require a Pro license:</p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 59%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Motion Detection</td>
+<td>Any motion, person detection, dog detection</td>
+</tr>
+<tr class="even">
+<td>Sound Detection</td>
+<td>Any sound, dog bark, baby cry</td>
+</tr>
+<tr class="odd">
+<td>Two-Way Audio</td>
+<td>Push-to-talk and text-to-speech</td>
+</tr>
+<tr class="even">
+<td>Activity History</td>
+<td>Event timeline and analytics charts</td>
+</tr>
+<tr class="odd">
+<td>RTSP Streaming</td>
+<td>Stream to VLC, ffmpeg, or NVR systems</td>
+</tr>
+<tr class="even">
+<td>MQTT Integration</td>
+<td>Publish events to Home Assistant, Node-RED</td>
+</tr>
+<tr class="odd">
+<td>API Documentation</td>
+<td>Interactive reference for developers</td>
+</tr>
+<tr class="even">
+<td>Certificate Download</td>
+<td>Install HTTPS certificate permanently</td>
+</tr>
+<tr class="odd">
+<td>Reverse Proxy Mode</td>
+<td>Access camera through nginx, Caddy, or CloudFlare</td>
+</tr>
+</tbody>
+</table>
 <p>Free features: live video streaming via web dashboard and camera
 controls (resolution, FPS, rotation, torch).</p>
 <hr />
 <h2 id="android-app">Android App</h2>
 <p>The Android app runs on the phone and acts as the camera server.</p>
 <h3 id="main-screen">Main Screen</h3>
-<p>The main screen shows: - <strong>Stream URL</strong> - the address to
-access the dashboard - <strong>Status</strong> - current streaming state
-and viewer count - <strong>Control buttons</strong> - camera,
-resolution, FPS, rotation, torch</p>
-<p><strong>Quick Controls (tap to change):</strong> -
-<strong>Camera</strong> - switch between front/back camera -
-<strong>Resolution</strong> - change video resolution -
-<strong>FPS</strong> - change frame rate (tap the speedometer icon) -
-<strong>Rotation</strong> - rotate video orientation -
-<strong>Torch</strong> - toggle flashlight (if available)</p>
+<p>The main screen shows:</p>
+<ul>
+<li><strong>Stream URL</strong> - the address to access the
+dashboard</li>
+<li><strong>Status</strong> - current streaming state and viewer
+count</li>
+<li><strong>Control buttons</strong> - camera, resolution, FPS,
+rotation, torch</li>
+</ul>
+<p><strong>Quick Controls (tap to change):</strong></p>
+<ul>
+<li><strong>Camera</strong> - switch between front/back camera</li>
+<li><strong>Resolution</strong> - change video resolution</li>
+<li><strong>FPS</strong> - change frame rate (tap the speedometer
+icon)</li>
+<li><strong>Rotation</strong> - rotate video orientation</li>
+<li><strong>Torch</strong> - toggle flashlight (if available)</li>
+</ul>
 <h3 id="status-overlay">Status Overlay</h3>
 <p>The status overlay appears on the live preview showing system health.
 Tap to expand for full details.</p>
-<p><strong>Information displayed:</strong> - Connection status (Web,
-RTSP, MQTT, Audio listeners) - System metrics (CPU, Memory, Battery,
-Temperature) - Detection subsystem status (6 colored dots)</p>
+<p><strong>Information displayed:</strong></p>
+<ul>
+<li>Connection status (Web, RTSP, MQTT, Audio listeners)</li>
+<li>System metrics (CPU, Memory, Battery, Temperature)</li>
+<li>Detection subsystem status (6 colored dots)</li>
+</ul>
 <p><strong>Status States:</strong></p>
 <table>
 <thead>
@@ -483,9 +654,12 @@ detection.</p>
 <p>The video stream appears at the top of the page with status
 information below: - Stream status (Buffering, Streaming, or error) -
 Resolution and frame rate - Bitrate and viewer count</p>
-<p><strong>Controls:</strong> - <strong>Fullscreen</strong> - expand
-video to full screen - <strong>Snapshot</strong> - capture a still image
-(downloads as JPEG)</p>
+<p><strong>Controls:</strong></p>
+<ul>
+<li><strong>Fullscreen</strong> - expand video to full screen</li>
+<li><strong>Snapshot</strong> - capture a still image (downloads as
+JPEG)</li>
+</ul>
 <h4 id="camera-settings">Camera Settings</h4>
 <p>Click to expand. Changes take effect immediately.</p>
 <table>
@@ -534,13 +708,43 @@ video to full screen - <strong>Snapshot</strong> - capture a still image
 </tr>
 </tbody>
 </table>
-<p><strong>Camera Capabilities:</strong> - <strong>Resolutions:</strong>
-Up to 1920x1080 (1080p). Options depend on device. - <strong>Frame
-Rate:</strong> 1-60 fps. Older (LEGACY) devices capped at 15 fps for
-stability. - <strong>Quality:</strong> 1-100 quality level. Lower =
-smaller files, higher = better quality. - <strong>Automatic
-Controls:</strong> Autofocus, exposure, and white balance are always
-automatic. - <strong>Zoom:</strong> Not available.</p>
+<p><strong>Camera Capabilities:</strong></p>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Capability</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Resolutions</td>
+<td>Up to 1920x1080 (1080p). Options depend on device.</td>
+</tr>
+<tr class="even">
+<td>Frame Rate</td>
+<td>1-60 fps. Older (LEGACY) devices capped at 15 fps for
+stability.</td>
+</tr>
+<tr class="odd">
+<td>Quality</td>
+<td>1-100 quality level. Lower = smaller files, higher = better
+quality.</td>
+</tr>
+<tr class="even">
+<td>Automatic Controls</td>
+<td>Autofocus, exposure, and white balance are always automatic.</td>
+</tr>
+<tr class="odd">
+<td>Zoom</td>
+<td>Not available.</td>
+</tr>
+</tbody>
+</table>
 <h4 id="two-way-audio-pro-feature">Two-Way Audio [Pro Feature]</h4>
 <p>Click to expand. Allows you to speak through the camera.</p>
 <p><strong>Push to Talk:</strong> Press and hold the button, speak, then
@@ -553,25 +757,38 @@ requirement). PTT and TTS require Pro; listening is free.</p>
 <h4 id="motion-detection-pro-feature">Motion Detection [Pro
 Feature]</h4>
 <p>Click to expand. Configure motion-based alerts.</p>
-<p><strong>Detection types:</strong> - <strong>Any Motion</strong> -
-triggers on pixel changes - <strong>Person</strong> - AI detection of
-humans - <strong>Dog</strong> - AI detection of dogs</p>
-<p><strong>Settings:</strong> - <strong>Sensitivity</strong> - how
-easily motion triggers (1 = large movements only, 10 = very sensitive) -
-<strong>Cooldown</strong> - minimum seconds between alerts -
-<strong>Confidence</strong> - for AI detection, how certain the model
-must be - <strong>Show Boxes</strong> - display bounding boxes around
-detected objects</p>
+<p><strong>Detection types:</strong></p>
+<ul>
+<li><strong>Any Motion</strong> - triggers on pixel changes</li>
+<li><strong>Person</strong> - AI detection of humans</li>
+<li><strong>Dog</strong> - AI detection of dogs</li>
+</ul>
+<p><strong>Settings:</strong></p>
+<ul>
+<li><strong>Sensitivity</strong> - how easily motion triggers (1 = large
+movements only, 10 = very sensitive)</li>
+<li><strong>Cooldown</strong> - minimum seconds between alerts</li>
+<li><strong>Confidence</strong> - for AI detection, how certain the
+model must be</li>
+<li><strong>Show Boxes</strong> - display bounding boxes around detected
+objects</li>
+</ul>
 <h4 id="sound-detection-pro-feature">Sound Detection [Pro Feature]</h4>
 <p>Click to expand. Configure audio-based alerts.</p>
-<p><strong>Detection types:</strong> - <strong>Any Sound</strong> -
-triggers on volume threshold - <strong>Dog Bark</strong> - AI
-classification - <strong>Baby Cry</strong> - AI classification</p>
-<p><strong>Settings:</strong> - <strong>Threshold</strong> - for Any
-Sound, how loud before triggering (1 = loud only, 10 = very sensitive) -
-<strong>Cooldown</strong> - minimum seconds between alerts -
-<strong>Confidence</strong> - for AI detection, how certain the model
-must be</p>
+<p><strong>Detection types:</strong></p>
+<ul>
+<li><strong>Any Sound</strong> - triggers on volume threshold</li>
+<li><strong>Dog Bark</strong> - AI classification</li>
+<li><strong>Baby Cry</strong> - AI classification</li>
+</ul>
+<p><strong>Settings:</strong></p>
+<ul>
+<li><strong>Threshold</strong> - for Any Sound, how loud before
+triggering (1 = loud only, 10 = very sensitive)</li>
+<li><strong>Cooldown</strong> - minimum seconds between alerts</li>
+<li><strong>Confidence</strong> - for AI detection, how certain the
+model must be</li>
+</ul>
 <h4 id="activity-timeline-pro-feature">Activity Timeline [Pro
 Feature]</h4>
 <p>Shows a visual summary of today’s detection events.</p>
@@ -637,11 +854,14 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <li>Maximum 3 connections per IP address</li>
 <li>Unencrypted - use only on trusted networks</li>
 </ul>
-<p><strong>RTSP Authentication Details:</strong> - Uses HTTP Basic
-authentication (credentials Base64-encoded, not encrypted) - Video
-stream is always unencrypted regardless of auth setting - Rate limiting:
-5 failed attempts triggers 60-second lockout - Only use on trusted
-networks or behind a VPN</p>
+<p><strong>RTSP Authentication Details:</strong></p>
+<ul>
+<li>Uses HTTP Basic authentication (credentials Base64-encoded, not
+encrypted)</li>
+<li>Video stream is always unencrypted regardless of auth setting</li>
+<li>Rate limiting: 5 failed attempts triggers 60-second lockout</li>
+<li>Only use on trusted networks or behind a VPN</li>
+</ul>
 <hr />
 <h3 id="mqtt-page-pro-feature">MQTT Page [Pro Feature]</h3>
 <p>Configure MQTT for integration with Home Assistant, Node-RED, or
@@ -677,10 +897,13 @@ other IoT platforms.</p>
 </tr>
 </tbody>
 </table>
-<p><strong>MQTT Security:</strong> - Credentials are stored encrypted on
-device (AES-256) - Enable TLS when using authentication to protect
-credentials in transit - Remote commands are disabled by default for
-security</p>
+<p><strong>MQTT Security:</strong></p>
+<ul>
+<li>Credentials are stored encrypted on device (AES-256)</li>
+<li>Enable TLS when using authentication to protect credentials in
+transit</li>
+<li>Remote commands are disabled by default for security</li>
+</ul>
 <h4 id="published-topics">Published Topics</h4>
 <p>All topics use a configurable prefix (default:
 <code>ipcamera</code>):</p>
@@ -774,16 +997,27 @@ security. Torch and snapshot are HTTP-only (<code>/torch</code>,
 <h3 id="activity-page-pro-feature">Activity Page [Pro Feature]</h3>
 <p>View detection event history and analytics.</p>
 <h4 id="time-range">Time Range</h4>
-<p>Select a time range using: - Quick presets: Today, Yesterday, 7 Days,
-30 Days, All Time - Date picker for custom range - Arrow buttons to move
-forward/backward</p>
+<p>Select a time range using:</p>
+<ul>
+<li>Quick presets: Today, Yesterday, 7 Days, 30 Days, All Time</li>
+<li>Date picker for custom range</li>
+<li>Arrow buttons to move forward/backward</li>
+</ul>
 <h4 id="filtering">Filtering</h4>
-<p>Click filter chips to show specific event types: - All events -
-Motion events (Any, Person, Dog) - Sound events (Any, Dog Bark, Baby
-Cry)</p>
+<p>Click filter chips to show specific event types:</p>
+<ul>
+<li>All events</li>
+<li>Motion events (Any, Person, Dog)</li>
+<li>Sound events (Any, Dog Bark, Baby Cry)</li>
+</ul>
 <h4 id="statistics">Statistics</h4>
-<p>Cards showing: - Total motion events - Total sound events - Peak
-activity hour - Total events</p>
+<p>Cards showing:</p>
+<ul>
+<li>Total motion events</li>
+<li>Total sound events</li>
+<li>Peak activity hour</li>
+<li>Total events</li>
+</ul>
 <h4 id="charts">Charts</h4>
 <ul>
 <li><strong>Activity Over Time</strong> - line chart showing event
@@ -846,14 +1080,26 @@ certificate from the app settings for a permanent fix.</p>
 <h3 id="phone-overheating">Phone Overheating</h3>
 <p>The app automatically reduces frame rate when the phone gets hot: -
 38°C+ → 15 fps max - 42°C+ → 10 fps max - 48°C+ → 5 fps max</p>
-<p>To reduce heat manually: - Lower resolution and frame rate - Use
-H.264 instead of MJPEG - Keep phone in a ventilated area - Avoid direct
-sunlight</p>
+<p>To reduce heat manually:</p>
+<ul>
+<li>Lower resolution and frame rate</li>
+<li>Use H.264 instead of MJPEG</li>
+<li>Keep phone in a ventilated area</li>
+<li>Avoid direct sunlight</li>
+</ul>
 <h3 id="detection-issues">Detection Issues</h3>
-<p><strong>Too many false alerts:</strong> - Lower motion sensitivity -
-Lower sound threshold - Increase AI confidence</p>
-<p><strong>Not detecting:</strong> - Increase motion sensitivity -
-Increase sound threshold - Decrease AI confidence</p>
+<p><strong>Too many false alerts:</strong></p>
+<ul>
+<li>Lower motion sensitivity</li>
+<li>Lower sound threshold</li>
+<li>Increase AI confidence</li>
+</ul>
+<p><strong>Not detecting:</strong></p>
+<ul>
+<li>Increase motion sensitivity</li>
+<li>Increase sound threshold</li>
+<li>Decrease AI confidence</li>
+</ul>
 <p><strong>Detection stopped working:</strong> The app auto-disables
 detection after 5 consecutive ML inference failures to prevent battery
 drain. A toast notification appears when this happens. To re-enable: 1.
@@ -884,39 +1130,107 @@ correctly)</li>
 internet</strong> - use a reverse proxy with authentication instead.</p>
 <hr />
 <h2 id="faq">FAQ</h2>
-<p><strong>How many viewers can connect?</strong> No practical limit.
-Each viewer has an independent queue.</p>
-<p><strong>Does it record video?</strong> No. Use an NVR with RTSP to
-record.</p>
-<p><strong>Can I use multiple cameras?</strong> Run the app on multiple
-phones. Each phone is one camera.</p>
-<p><strong>Why does the IP address change?</strong> Your router assigns
-dynamic IPs. You can reserve a static IP in your router settings.</p>
-<p><strong>Does it work when the phone is locked?</strong> Yes, if “Run
-in Background” is enabled. The app will continue streaming even with the
-screen off. Additionally, when you lock the phone, the app automatically
-moves to the background so you see your home screen when you unlock
-(appliance mode).</p>
-<p><strong>Does it need internet?</strong> No. Only local WiFi is
-required.</p>
-<p><strong>Why request battery optimization exemption?</strong> Without
-it, Android may kill the app to save battery, stopping your stream.</p>
-<p><strong>Why doesn’t auto-start work fully on Android 14+?</strong>
+<details>
+<summary>
+<strong>How many viewers can connect?</strong>
+</summary>
+<p>
+No practical limit. Each viewer has an independent queue.
+</p>
+</details>
+<details>
+<summary>
+<strong>Does it record video?</strong>
+</summary>
+<p>
+No. Use an NVR with RTSP to record.
+</p>
+</details>
+<details>
+<summary>
+<strong>Can I use multiple cameras?</strong>
+</summary>
+<p>
+Run the app on multiple phones. Each phone is one camera.
+</p>
+</details>
+<details>
+<summary>
+<strong>Why does the IP address change?</strong>
+</summary>
+<p>
+Your router assigns dynamic IPs. You can reserve a static IP in your
+router settings.
+</p>
+</details>
+<details>
+<summary>
+<strong>Does it work when the phone is locked?</strong>
+</summary>
+<p>
+Yes, if “Run in Background” is enabled. The app will continue streaming
+even with the screen off. Additionally, when you lock the phone, the app
+automatically moves to the background so you see your home screen when
+you unlock (appliance mode).
+</p>
+</details>
+<details>
+<summary>
+<strong>Does it need internet?</strong>
+</summary>
+<p>
+No. Only local WiFi is required.
+</p>
+</details>
+<details>
+<summary>
+<strong>Why request battery optimization exemption?</strong>
+</summary>
+<p>
+Without it, Android may kill the app to save battery, stopping your
+stream.
+</p>
+</details>
+<details>
+<summary>
+<strong>Why doesn’t auto-start work fully on Android 14+?</strong>
+</summary>
+<p>
 Android 14 introduced stricter security for camera and microphone
 access. After a reboot, the app shows a “Tap to resume streaming”
 notification. Simply tap the notification to enable camera/mic features
 (streaming, RTSP, detection) - no need to open the full app.
 Alternatively, open the app normally to unlock full functionality. This
-is an Android platform restriction, not an app limitation.</p>
-<p><strong>Can I zoom the camera?</strong> No. Digital zoom is not
-implemented.</p>
-<p><strong>What’s the difference between listening and PTT?</strong>
+is an Android platform restriction, not an app limitation.
+</p>
+</details>
+<details>
+<summary>
+<strong>Can I zoom the camera?</strong>
+</summary>
+<p>
+No. Digital zoom is not implemented.
+</p>
+</details>
+<details>
+<summary>
+<strong>What’s the difference between listening and PTT?</strong>
+</summary>
+<p>
 Listening plays device audio (phone’s mic) through your browser.
 Push-to-Talk transmits your voice to the phone’s speaker. Both require
-Pro.</p>
-<p><strong>Why did detection stop automatically?</strong> After 5
-consecutive ML inference failures, detection auto-disables to save
-battery. Re-enable it in the dashboard detection panel.</p>
+Pro.
+</p>
+</details>
+<details>
+<summary>
+<strong>Why did detection stop automatically?</strong>
+</summary>
+<p>
+After 5 consecutive ML inference failures, detection auto-disables to
+save battery. Re-enable it in the dashboard detection panel.
+</p>
+</details>
         </main>
 
         <footer>

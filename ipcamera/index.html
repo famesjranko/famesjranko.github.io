@@ -222,10 +222,19 @@
 
         .cta-buttons {
             display: flex;
+            flex-direction: column;
             gap: 1rem;
-            flex-wrap: wrap;
             opacity: 0;
             animation: fadeUp 0.6s ease-out 0.4s forwards;
+        }
+
+        .cta-secondary {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .cta-secondary .btn {
+            flex: 1;
         }
 
         .btn {
@@ -574,6 +583,10 @@
                 width: 100%;
             }
 
+            .cta-secondary {
+                flex-direction: column;
+            }
+
             .btn {
                 width: 100%;
             }
@@ -598,6 +611,7 @@
                 IP Camera
             </div>
             <nav class="nav-links">
+                <a href="guide/">User Guide</a>
                 <a href="api/">API Docs</a>
                 <a href="privacy/">Privacy</a>
             </nav>
@@ -625,9 +639,11 @@
                         </svg>
                         Get on Google Play
                     </a>
-                    <a href="api/" class="btn btn-secondary">
-                        View API Docs
-                    </a>
+                    <div class="cta-secondary">
+                        <a href="guide/" class="btn btn-secondary">User Guide</a>
+                        <a href="api/" class="btn btn-secondary">API Docs</a>
+                        <a href="privacy/" class="btn btn-secondary">Privacy</a>
+                    </div>
                 </div>
             </div>
 
@@ -693,6 +709,7 @@
         <footer>
             <span>&copy; 2026 IP Camera</span>
             <div class="footer-links">
+                <a href="guide/">User Guide</a>
                 <a href="privacy/">Privacy Policy</a>
                 <a href="api/">API Documentation</a>
             </div>

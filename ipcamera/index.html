@@ -95,12 +95,43 @@
 
         .logo-icon { width: 30px; height: 30px; border-radius: 7px; }
 
-        .nav-links { display: flex; gap: 2rem; }
+        .nav-links { display: flex; gap: 2rem; flex-shrink: 0; }
         .nav-links a {
             color: var(--text-secondary); text-decoration: none;
             font-size: 0.75rem; transition: color 0.2s;
+            flex: 0 0 auto;
         }
         .nav-links a:hover { color: var(--text-primary); }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0.6rem;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .burger:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.13);
+        }
+        .burger span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: var(--text-secondary);
+            border-radius: 1px;
+            transition: transform 0.25s, opacity 0.25s;
+        }
+        .burger.open { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); }
+        .burger.open span { background: var(--accent); }
+        .burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .burger.open span:nth-child(2) { opacity: 0; }
+        .burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
         .hero { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 2.5rem; margin-bottom: 5rem; }
         .hero-content { flex: 1; min-width: 0; }
@@ -299,22 +330,101 @@
             #phone-canvas { width: 230px; height: 410px; }
         }
 
+        @media (min-width: 721px) and (max-width: 900px) {
+            .hero-visual { flex: 0 0 auto; }
+        }
+
         @media (max-width: 720px) {
 
             .hero { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
             .hero-content { order: 1; }
             .hero-visual { display: none; }
             .tagline { max-width: 100%; }
-            
+
             h1 { white-space: normal; font-size: clamp(2rem, 6vw, 3rem); }
+        }
+
+        /* Tablet: 2 columns, panels span row pairs */
+        @media (min-width: 601px) and (max-width: 900px) {
+            .nav-links { gap: 0.75rem; }
+            .nav-links a { text-align: center; }
+            .features { grid-template-columns: repeat(2, 1fr); border-radius: 12px; }
+            .feature:nth-child(1) { border-radius: 12px 0 0 0; }
+            .feature:nth-child(2) { border-radius: 0 12px 0 0; border-left: none; }
+            .feature:nth-child(3), .feature:nth-child(4) { border-top: 1px solid var(--card-border); }
+            .feature:nth-child(3) { border-radius: 0 0 0 12px; }
+            .feature:nth-child(4) { border-radius: 0 0 12px 0; border-left: none; }
+
+            /* Panels span both columns, ordered after their row */
+            .feature-panel {
+                display: none;
+                grid-column: span 2;
+                border: 1px solid var(--card-border);
+                border-top: none;
+                border-radius: 0;
+                overflow: hidden;
+            }
+            .feature-panel.open { display: grid; grid-template-rows: 1fr; }
+            /* Row 1 panels (0,1) get bottom radius when no row 2 below */
+            #panel-0, #panel-1 { border-radius: 0 0 12px 12px; margin-bottom: 1rem; }
+            /* Row 2 panels (2,3) */
+            #panel-2, #panel-3 { border-radius: 0 0 12px 12px; }
+            /* Cards in row with open panel lose bottom radius */
+            .feature[data-panel="0"].active, .feature[data-panel="1"].active { border-radius: 12px 0 0 0; }
+            .feature[data-panel="0"].active + .feature[data-panel="1"] { border-radius: 0 12px 0 0; }
+            .feature[data-panel="1"].active { border-radius: 0 12px 0 0; }
+            .feature[data-panel="2"].active, .feature[data-panel="3"].active { border-radius: 0; }
+            .feature-panels { display: none; }
         }
 
         @media (max-width: 600px) {
             .container { padding: 1.75rem 1.25rem; }
-            .features { grid-template-columns: 1fr; }
+            header { position: relative; }
+            .burger { display: flex; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: calc(100% + 0.5rem);
+                right: 0;
+                flex-direction: column;
+                gap: 0;
+                background: rgba(10, 12, 10, 0.95);
+                border: 1px solid var(--card-border);
+                border-radius: 12px;
+                padding: 0.5rem;
+                min-width: 150px;
+                z-index: 100;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            }
+            .nav-links.open { display: flex; }
+            .nav-links a {
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+                border-radius: 8px;
+                transition: background 0.2s, color 0.2s;
+            }
+            .nav-links a:hover {
+                background: rgba(34,197,94,0.1);
+                color: var(--accent);
+            }
+            .features { grid-template-columns: 1fr; border-radius: 12px; border-bottom: 1px solid var(--card-border); }
             .feature + .feature { border-left: none; border-top: 1px solid var(--card-border); }
+            .feature:last-child { border-radius: 0 0 12px 12px; }
             footer { flex-direction: column; gap: 1rem; }
-            
+
+            /* Inline panels in mobile */
+            .feature-panel {
+                display: none;
+                border: 1px solid var(--card-border);
+                border-top: none;
+                border-radius: 0 0 12px 12px;
+                overflow: hidden;
+                margin-bottom: 1rem;
+            }
+            .feature-panel.open { display: grid; grid-template-rows: 1fr; }
+            .feature.active { border-radius: 0; }
+            .feature:first-child.active { border-radius: 12px 12px 0 0; }
+            .feature-panels { display: none; }
         }
 
         @media (max-width: 480px) {
@@ -339,6 +449,9 @@
                 <a href="api/">API Docs</a>
                 <a href="privacy/">Privacy</a>
             </nav>
+            <button class="burger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </header>
 
         <main class="hero">
@@ -803,6 +916,69 @@
           setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
         }
       });
+    });
+
+    // ── Panel relocation for responsive layouts ─────────────────────────
+    const mobileQuery = window.matchMedia('(max-width: 600px)');
+    const tabletQuery = window.matchMedia('(min-width: 601px) and (max-width: 900px)');
+    const panelsContainer = document.querySelector('.feature-panels');
+    const featuresGrid = document.querySelector('.features');
+
+    function relocatePanels() {
+        const isMobile = mobileQuery.matches;
+        const isTablet = tabletQuery.matches;
+
+        document.querySelectorAll('.feature-panel').forEach(panel => {
+            const idx = parseInt(panel.id.replace('panel-', ''));
+            const card = document.querySelector('.feature[data-panel="' + idx + '"]');
+
+            if (isMobile) {
+                // Mobile: panel directly after its card
+                card.after(panel);
+                panel.style.order = '';
+            } else if (isTablet) {
+                // Tablet: panels in grid, ordered after row pairs
+                featuresGrid.appendChild(panel);
+                // Row 1 (cards 0,1) → order 2, Row 2 (cards 2,3) → order 5
+                panel.style.order = idx < 2 ? 2 : 5;
+            } else {
+                // Desktop: panels in separate container
+                panelsContainer.appendChild(panel);
+                panel.style.order = '';
+            }
+        });
+
+        // Set card order for tablet grid
+        if (isTablet) {
+            document.querySelectorAll('.feature').forEach(card => {
+                const idx = parseInt(card.getAttribute('data-panel'));
+                // Cards: 0,1 → order 0,1; Cards 2,3 → order 3,4
+                card.style.order = idx < 2 ? idx : idx + 1;
+            });
+        } else {
+            document.querySelectorAll('.feature').forEach(card => {
+                card.style.order = '';
+            });
+        }
+    }
+
+    relocatePanels();
+    mobileQuery.addEventListener('change', relocatePanels);
+    tabletQuery.addEventListener('change', relocatePanels);
+
+    // ── Burger menu toggle ────────────────────────────────────────────
+    const burger = document.querySelector('.burger');
+    const navLinks = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('open');
+        navLinks.classList.toggle('open');
+    });
+    // Close menu when clicking a link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            burger.classList.remove('open');
+            navLinks.classList.remove('open');
+        });
     });
     })();
     </script>

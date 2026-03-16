@@ -427,6 +427,54 @@
             .feature-panels { display: none; }
         }
 
+        #testing-banner {
+            background: rgba(34, 197, 94, 0.06);
+            border-top: 1px solid rgba(34, 197, 94, 0.18);
+            border-bottom: 1px solid rgba(34, 197, 94, 0.18);
+            padding: 0.85rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+        }
+        #testing-banner-msg { color: rgba(255, 255, 255, 0.6); }
+        #testing-banner-btn {
+            color: #22c55e; font-weight: 600; text-decoration: none;
+            white-space: nowrap;
+        }
+        #testing-banner-btn:hover { text-decoration: underline; }
+
+        #testing-modal-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        #testing-modal {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 100%; max-width: 380px;
+        }
+        .tm-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+        .tm-header h3 { font-size: 1rem; font-weight: 600; margin: 0; color: var(--text-primary); }
+        #testing-modal-close { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 0; }
+        #testing-modal-close:hover { color: #fff; }
+        .tm-hint { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-bottom: 1rem; }
+        .tm-field { margin-bottom: 0.75rem; }
+        .tm-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.35); display: block; margin-bottom: 0.3rem; }
+        .tm-row { display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 0.5rem 0.75rem; }
+        .tm-value { flex: 1; font-size: 0.83rem; font-family: monospace; color: var(--text-primary); word-break: break-all; }
+        .tm-copy { background: rgba(255,255,255,0.08); border: none; color: rgba(255,255,255,0.65); font-size: 0.72rem; border-radius: 4px; padding: 0.2rem 0.5rem; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .tm-copy:hover { background: rgba(255,255,255,0.14); }
+        .tm-copy.copied { color: #22c55e; }
+        .tm-row-body { align-items: flex-start; }
+        .tm-value-body { white-space: pre-wrap; font-family: inherit; font-size: 0.8rem; line-height: 1.5; }
+
         @media (max-width: 480px) {
             .cta-secondary .btn { font-size: 0.68rem; padding: 0.85rem 0.85rem; }
         }
@@ -494,6 +542,11 @@
             </div>
 
         </main>
+
+        <div id="testing-banner" style="display:none">
+            <span id="testing-banner-msg"></span>
+            <a id="testing-banner-btn" href="#">→</a>
+        </div>
 
         <section class="features" id="feature-cards">
             <div class="feature" data-panel="0">
@@ -594,8 +647,100 @@
         </footer>
     </div>
 
+        <div id="testing-modal-backdrop" style="display:none" role="dialog" aria-modal="true" aria-labelledby="testing-modal-title">
+            <div id="testing-modal">
+                <div class="tm-header">
+                    <div style="display:flex;align-items:center;gap:0.6rem">
+                        <img src="icon.png" alt="" style="width:28px;height:28px;border-radius:7px">
+                        <h3 id="testing-modal-title">Request Testing Access</h3>
+                    </div>
+                    <button id="testing-modal-close" aria-label="Close">&times;</button>
+                </div>
+                <p class="tm-hint">A mail app should have opened. If not, use these details:</p>
+                <div class="tm-field">
+                    <span class="tm-label">Email</span>
+                    <div class="tm-row">
+                        <span id="tm-email" class="tm-value">famesjranko@gmail.com</span>
+                        <button class="tm-copy" data-target="tm-email">Copy</button>
+                    </div>
+                </div>
+                <div class="tm-field">
+                    <span class="tm-label">Subject</span>
+                    <div class="tm-row">
+                        <span id="tm-subject" class="tm-value"></span>
+                        <button class="tm-copy" data-target="tm-subject">Copy</button>
+                    </div>
+                </div>
+                <div class="tm-field">
+                    <span class="tm-label">Body</span>
+                    <div class="tm-row tm-row-body">
+                        <span id="tm-body" class="tm-value tm-value-body"></span>
+                        <button class="tm-copy" data-target="tm-body" style="align-self:flex-start">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
+    // ─── Release Stage Config ────────────────────────────────────────────────────
+    // Change RELEASE_STAGE to control the testing banner:
+    //   'internal'   → shows banner: "App is in internal testing — Join Internal Testing →"
+    //   'closed'     → shows banner: "App is in closed beta — Join Beta Testing →"
+    //   'production' → banner hidden
+    const RELEASE_STAGE = 'internal';
+
+    (function () {
+      const INTERNAL_BODY = 'Hi,\n\nI am requesting to join the internal testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
+      const CLOSED_BODY   = 'Hi,\n\nI am requesting to join the beta testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
+
+      const CTA = {
+        internal:   { showBanner: true,  msg: 'App is currently in testing.', btn: 'Join Internal Testing \u2192', subject: 'IPCamera Internal Testing Request', body: INTERNAL_BODY, href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Internal%20Testing%20Request&body=' + encodeURIComponent(INTERNAL_BODY) },
+        closed:     { showBanner: true,  msg: 'App is in closed beta.',                btn: 'Join Beta Testing \u2192',      subject: 'IPCamera Beta Testing Request',      body: CLOSED_BODY,   href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Beta%20Testing%20Request&body='     + encodeURIComponent(CLOSED_BODY)   },
+        production: { showBanner: false },
+      };
+
+      const cfg = CTA[RELEASE_STAGE] || CTA.production;
+      const banner = document.getElementById('testing-banner');
+      banner.style.display = cfg.showBanner ? '' : 'none';
+      if (!cfg.showBanner) return;
+
+      document.getElementById('testing-banner-msg').textContent = cfg.msg;
+      const bannerBtn = document.getElementById('testing-banner-btn');
+      bannerBtn.textContent = cfg.btn;
+
+      // Modal setup
+      const backdrop = document.getElementById('testing-modal-backdrop');
+      document.getElementById('tm-subject').textContent = cfg.subject;
+      document.getElementById('tm-body').textContent = cfg.body;
+
+      function openModal() { backdrop.style.display = 'flex'; }
+      function closeModal() { backdrop.style.display = 'none'; }
+
+      // Banner button: fire mailto and show modal fallback
+      bannerBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = cfg.href;
+        openModal();
+      });
+
+      document.getElementById('testing-modal-close').addEventListener('click', closeModal);
+      backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
+
+      // Copy buttons
+      document.querySelectorAll('.tm-copy').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const text = document.getElementById(btn.getAttribute('data-target')).textContent;
+          navigator.clipboard.writeText(text).then(function () {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+          });
+        });
+      });
+    })();
+    // ─────────────────────────────────────────────────────────────────────────────
+
     (function() {
     // ── Canvas setup ───────────────────────────────────────────────
     const canvas = document.getElementById('phone-canvas');

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /ipcamera/
+Sitemap: https://famesjranko.github.io/ipcamera/sitemap.xml

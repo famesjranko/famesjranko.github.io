@@ -401,6 +401,7 @@
                 <a href="#android-app">Android App</a>
                 <a href="#web-dashboard">Web Dashboard</a>
                 <a href="#embedding">Embedding</a>
+                <a href="#remote-access">Remote Access</a>
                 <a href="#troubleshooting">Troubleshooting</a>
                 <a href="#faq">FAQ</a>
             </div>
@@ -1057,6 +1058,60 @@ required when password protection is enabled.</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">img</span> <span class="er">src</span><span class="ot">=</span><span class="st">&quot;https://192.168.1.100:8443/stream&quot;</span> <span class="dt">/&gt;</span></span></code></pre></div>
 <hr />
+<h2 id="remote-access">Remote Access</h2>
+<p>The app runs on your local WiFi network by default. For remote
+access, you have two options: a VPN or a reverse proxy.</p>
+<p><strong>Do not port-forward the camera directly to the
+internet.</strong> Use a VPN or authenticated reverse proxy instead.</p>
+<h3 id="using-a-vpn">Using a VPN</h3>
+<p>Connect the phone to your home network via a VPN (e.g., WireGuard,
+OpenVPN, Tailscale). The phone can be on cellular data — it doesn’t need
+WiFi. Once connected, access the camera by its VPN address:</p>
+<pre><code>https://&lt;phone-vpn-address&gt;:8443</code></pre>
+<h4 id="making-lan-devices-reach-vpn-clients">Making LAN Devices Reach
+VPN Clients</h4>
+<p>Most VPN setups assign clients an address from a separate VPN subnet
+(e.g., <code>10.0.0.x</code>) rather than the main LAN subnet (e.g.,
+<code>192.168.1.x</code>). This means your LAN devices won’t be able to
+reach the phone’s VPN address unless you configure routing.</p>
+<p>The VPN host acts as a router between the two subnets:</p>
+<pre><code>LAN device (browser)
+    |
+    v
+Main router / firewall
+    (static route: VPN subnet via VPN host)
+    |
+    v
+VPN host (IP forwarding enabled)
+    |
+    v
+Phone on VPN (camera app running)</code></pre>
+<p><strong>What’s needed:</strong></p>
+<ul>
+<li><strong>IP forwarding</strong> enabled on the VPN host
+(<code>net.ipv4.ip_forward=1</code>)</li>
+<li><strong>Static route</strong> on your main router — destination: VPN
+subnet, gateway: VPN host’s LAN IP</li>
+</ul>
+<p>Without the static route, your router sends VPN-subnet traffic to the
+default gateway (your ISP), which drops it. This is the most commonly
+missed step.</p>
+<p><strong>Note:</strong> Some VPN tools (e.g., Tailscale) handle
+routing automatically and don’t require manual static routes. Check your
+VPN’s documentation.</p>
+<h3 id="using-a-reverse-proxy">Using a Reverse Proxy</h3>
+<p>A reverse proxy (nginx, Caddy, Cloudflare Tunnel, etc.) forwards
+HTTPS requests to the camera and provides a proper domain name and TLS
+certificate — no browser warnings.</p>
+<ol type="1">
+<li>Configure the proxy to terminate TLS and forward to the camera’s
+local address</li>
+<li>In the IP Camera app settings, enable <strong>Reverse Proxy
+Mode</strong> so the app trusts the <code>X-Forwarded-Proto</code>
+header (required for secure cookies)</li>
+</ol>
+<p><strong>Reverse Proxy Mode</strong> is a Pro feature.</p>
+<hr />
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="stream-wont-load">Stream Won’t Load</h3>
 <ol type="1">
@@ -1114,20 +1169,9 @@ Go to the detection panel 2. Toggle the detection type off and back on
 <li><strong>Android 14+ after reboot:</strong> Tap the notification or
 open the app to unlock camera access (see FAQ)</li>
 </ol>
-<h3 id="remote-access">Remote Access</h3>
-<p>The app works on your local network by default. For remote access,
-you have two options:</p>
-<ol type="1">
-<li><strong>VPN</strong> - Connect to your home network via VPN, then
-access the camera normally</li>
-<li><strong>Reverse Proxy</strong> - Set up a TLS-terminating reverse
-proxy (nginx, Caddy, etc.) with proper authentication, then enable
-“Reverse Proxy Mode” in app settings so the app trusts the proxy’s
-X-Forwarded-Proto header (required for secure cookies to work
-correctly)</li>
-</ol>
-<p><strong>Do not port-forward the camera directly to the
-internet</strong> - use a reverse proxy with authentication instead.</p>
+<h3 id="remote-access-1">Remote Access</h3>
+<p>See the <a href="#remote-access">Remote Access</a> section above for
+VPN setup, WireGuard configuration, and reverse proxy options.</p>
 <hr />
 <h2 id="faq">FAQ</h2>
 <details>

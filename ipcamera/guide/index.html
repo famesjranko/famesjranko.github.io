@@ -73,6 +73,19 @@
             color: var(--accent);
         }
 
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .nav-brand img {
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+        }
+
         header {
             margin-bottom: 1.5rem;
             padding-bottom: 1.5rem;
@@ -404,7 +417,10 @@
 <body>
     <div class="container">
         <nav class="top-nav">
-            <a href="../">&larr; Home</a>
+            <a href="../" class="nav-brand">
+                <img src="../icon.png" alt="IP Camera">
+                IP Camera
+            </a>
             <a href="../api/">API Docs</a>
             <a href="../privacy/">Privacy</a>
         </nav>
@@ -455,7 +471,7 @@ service</li>
 browser</li>
 <li>Enter the URL shown in the app</li>
 <li>Accept the certificate warning (click “Advanced” → “Proceed”)</li>
-<li>Click <strong>Start Stream</strong> on the dashboard to begin
+<li>Click <strong>Start Streaming</strong> on the dashboard to begin
 viewing</li>
 </ol>
 <h3 id="pro-features">Pro Features</h3>

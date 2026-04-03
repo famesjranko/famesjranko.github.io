@@ -76,6 +76,19 @@
             color: var(--accent);
         }
 
+        .nav-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .nav-brand img {
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+        }
+
         header {
             margin-bottom: 2rem;
             padding-bottom: 1.5rem;
@@ -380,7 +393,10 @@
 <body>
     <div class="container">
         <nav class="top-nav">
-            <a href="../">&larr; Home</a>
+            <a href="../" class="nav-brand">
+                <img src="../icon.png" alt="IP Camera">
+                IP Camera
+            </a>
             <a href="../guide/">User Guide</a>
             <a href="../privacy/">Privacy</a>
         </nav>

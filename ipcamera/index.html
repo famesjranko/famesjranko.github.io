@@ -721,17 +721,17 @@
     <script>
     // ─── Release Stage Config ────────────────────────────────────────────────────
     // Change RELEASE_STAGE to control the testing banner:
-    //   'internal'   → shows banner: "App is in internal testing — Join Internal Testing →"
+    //   'internal'   → shows banner: "App is currently in testing. — Join Closed Testing →"
     //   'closed'     → shows banner: "App is in closed beta — Join Beta Testing →"
     //   'production' → banner hidden
     const RELEASE_STAGE = 'internal';
 
     (function () {
-      const INTERNAL_BODY = 'Hi,\n\nI am requesting to join the internal testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
+      const INTERNAL_BODY = 'Hi,\n\nI am requesting to join the closed testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
       const CLOSED_BODY   = 'Hi,\n\nI am requesting to join the beta testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
 
       const CTA = {
-        internal:   { showBanner: true,  msg: 'App is currently in testing.', btn: 'Join Internal Testing \u2192', subject: 'IPCamera Internal Testing Request', body: INTERNAL_BODY, href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Internal%20Testing%20Request&body=' + encodeURIComponent(INTERNAL_BODY) },
+        internal:   { showBanner: true,  msg: 'App is currently in testing.', btn: 'Join Closed Testing \u2192', subject: 'IPCamera Closed Testing Request', body: INTERNAL_BODY, href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Closed%20Testing%20Request&body=' + encodeURIComponent(INTERNAL_BODY) },
         closed:     { showBanner: true,  msg: 'App is in closed beta.',                btn: 'Join Beta Testing \u2192',      subject: 'IPCamera Beta Testing Request',      body: CLOSED_BODY,   href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Beta%20Testing%20Request&body='     + encodeURIComponent(CLOSED_BODY)   },
         production: { showBanner: false },
       };

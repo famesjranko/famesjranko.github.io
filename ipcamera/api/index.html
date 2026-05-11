@@ -553,6 +553,7 @@
 
             <h4><span class="method method-post">POST</span><span class="endpoint">/auth/logout</span></h4>
             <p>Revoke the current session token.</p>
+            <p>When logging out with a session cookie, include the matching <code>X-CSRF-Token</code> header.</p>
             <div class="code-block">
                 <div class="code-header">
                     <span>Response</span>
@@ -616,16 +617,12 @@
 
         <section id="csrf">
             <h2>CSRF Protection</h2>
-            <p>State-changing requests (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>) require CSRF protection when using cookie-based authentication.</p>
+            <p>State-changing requests (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>) require CSRF protection when authenticated via the session cookie.</p>
 
             <h3>When CSRF is Required</h3>
-            <p>CSRF validation applies to requests that:</p>
-            <ul>
-                <li>Use cookie-based authentication (browser sessions)</li>
-                <li>Perform state-changing operations (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>)</li>
-            </ul>
+            <p>CSRF validation applies to authenticated state-changing requests that present credentials via the session cookie issued by <code>POST /auth</code>. This includes <code>POST /auth/logout</code> when called from a cookie-backed session.</p>
             <div class="note">
-                <p><strong>Note:</strong> Pro users using Bearer token authentication (via <code>Authorization</code> header) are NOT subject to CSRF checks. CSRF protection only applies to cookie-based authentication.</p>
+                <p><strong>Note:</strong> Bearer-token and query-token authentication are exempt from CSRF — direct API clients (curl, scripts, Home Assistant) do not need to send <code>X-CSRF-Token</code>.</p>
             </div>
 
             <h3>How to Get the CSRF Token</h3>
@@ -643,7 +640,7 @@
             </div>
 
             <h3>How to Include the CSRF Token</h3>
-            <p>Include the CSRF token in the <code>X-CSRF-Token</code> header for all state-changing requests:</p>
+            <p>Include the CSRF token in the <code>X-CSRF-Token</code> header for dashboard/session-backed state-changing requests:</p>
             <div class="code-block">
                 <div class="code-header">
                     <span>X-CSRF-Token Header</span>
@@ -666,7 +663,7 @@
             </div>
 
             <h3>Error Response</h3>
-            <p>If the CSRF token is missing or invalid, the server returns a <code>403 Forbidden</code> response:</p>
+            <p>If the CSRF token is missing or invalid where required, the server returns a <code>403 Forbidden</code> response:</p>
             <div class="code-block">
                 <div class="code-header">
                     <span>Response (403 Forbidden)</span>
@@ -1565,6 +1562,51 @@
                     <button class="copy-btn">Copy</button>
                 </div>
                 <pre>{"type": "error", "message": "Authentication required"}</pre>
+            </div>
+
+            <h4>Batch Settings Acknowledgment</h4>
+            <p>Sent in response to a <code>settings_batch</code> client message. Reports which settings were applied, which failed validation, and which were silently blocked by Pro-gate restrictions.</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "type": "settings_batch_ack",
+  "success": true,
+  "proBlocked": ["motionEnabled", "rtspEnabled"]
+}</pre>
+            </div>
+            <p>When one or more settings fail validation:</p>
+            <div class="code-block">
+                <div class="code-header">
+                    <span>JSON</span>
+                    <button class="copy-btn">Copy</button>
+                </div>
+                <pre>{
+  "type": "settings_batch_ack",
+  "success": false,
+  "errors": ["unknownKey: Unknown setting", "frameRate: Value must be between 1 and 60"]
+}</pre>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>type</code></td><td>string</td><td>Always <code>"settings_batch_ack"</code></td></tr>
+                    <tr><td><code>success</code></td><td>boolean</td><td><code>true</code> if no errors occurred, <code>false</code> otherwise</td></tr>
+                    <tr><td><code>error</code></td><td>string</td><td>Present only on early validation failure (e.g., missing <code>settings</code> object)</td></tr>
+                    <tr><td><code>errors</code></td><td>string[]</td><td>Present when individual settings fail. Each entry is <code>"key: reason"</code></td></tr>
+                    <tr><td><code>proBlocked</code></td><td>string[]</td><td>Present when Pro-gated settings were silently blocked. Lists the blocked setting keys</td></tr>
+                </tbody>
+            </table>
+            <div class="note-box">
+                <p><strong>Note:</strong> A response with <code>success: true</code> and a non-empty <code>proBlocked</code> array is intentional. Non-Pro settings in the batch are applied normally, while boolean-enable settings that require a Pro license are silently ignored and listed in <code>proBlocked</code>. In a mixed batch, both <code>errors</code> and <code>proBlocked</code> can appear together when some settings fail validation while others are silently Pro-gated. The same <code>proBlocked</code> semantics apply to <code>POST /settings</code> HTTP responses.</p>
             </div>
         </section>
 

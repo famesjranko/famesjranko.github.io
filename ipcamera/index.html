@@ -721,18 +721,17 @@
     <script>
     // ─── Release Stage Config ────────────────────────────────────────────────────
     // Change RELEASE_STAGE to control the testing banner:
-    //   'internal'   → shows banner: "App is currently in testing. — Join Closed Testing →"
-    //   'closed'     → shows banner: "App is in closed beta — Join Beta Testing →"
+    //   'internal'   → shows banner: "App is currently in testing. — Join Closed Testing →" (mailto request)
+    //   'closed'     → shows banner: "App is in closed testing. — Join Testing →" (direct Play opt-in link)
     //   'production' → banner hidden
-    const RELEASE_STAGE = 'internal';
+    const RELEASE_STAGE = 'closed';
 
     (function () {
       const INTERNAL_BODY = 'Hi,\n\nI am requesting to join the closed testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
-      const CLOSED_BODY   = 'Hi,\n\nI am requesting to join the beta testing for IPCamera.\n\nName:\nGoogle account email: (required to add you as a tester on Google Play)\nDevice:\nAndroid version:\n\nThanks!';
 
       const CTA = {
         internal:   { showBanner: true,  msg: 'App is currently in testing.', btn: 'Join Closed Testing \u2192', subject: 'IPCamera Closed Testing Request', body: INTERNAL_BODY, href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Closed%20Testing%20Request&body=' + encodeURIComponent(INTERNAL_BODY) },
-        closed:     { showBanner: true,  msg: 'App is in closed beta.',                btn: 'Join Beta Testing \u2192',      subject: 'IPCamera Beta Testing Request',      body: CLOSED_BODY,   href: 'mailto:famesjranko@gmail.com?subject=IPCamera%20Beta%20Testing%20Request&body='     + encodeURIComponent(CLOSED_BODY)   },
+        closed:     { showBanner: true,  msg: 'App is in closed testing.',    btn: 'Join Testing \u2192',        href: 'https://play.google.com/apps/testing/com.landofoz.ipcamera', external: true },
         production: { showBanner: false },
       };
 
@@ -745,7 +744,15 @@
       const bannerBtn = document.getElementById('testing-banner-btn');
       bannerBtn.textContent = cfg.btn;
 
-      // Modal setup
+      if (cfg.external) {
+        // Direct Play Store opt-in link \u2014 no mailto, no modal.
+        bannerBtn.href = cfg.href;
+        bannerBtn.target = '_blank';
+        bannerBtn.rel = 'noopener';
+        return;
+      }
+
+      // Modal setup (mailto fallback flow)
       const backdrop = document.getElementById('testing-modal-backdrop');
       document.getElementById('tm-subject').textContent = cfg.subject;
       document.getElementById('tm-body').textContent = cfg.body;

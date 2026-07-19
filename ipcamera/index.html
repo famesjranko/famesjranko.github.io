@@ -25,10 +25,16 @@
     <meta name="twitter:description" content="Transform any Android phone into an IP camera with H.264 streaming, RTSP, motion detection — all local, no cloud required.">
     <meta name="twitter:image" content="https://famesjranko.github.io/ipcamera/og-image.png">
     <meta name="twitter:image:alt" content="Turn your old phone into an IP camera — local H.264 streaming with no cloud required">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Self-hosted variable JetBrains Mono (OFL) — no external font dependency */
+        @font-face {
+            font-family: 'JetBrains Mono';
+            src: url('jetbrains-mono.woff2') format('woff2');
+            font-weight: 100 800;
+            font-style: normal;
+            font-display: swap;
+        }
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -38,8 +44,8 @@
             --accent: #22c55e;
             --accent-glow: rgba(34,197,94,0.5);
             --text-primary: #e8e8e8;
-            --text-secondary: #555;
-            --text-tertiary: #333;
+            --text-secondary: #8a8a8a;
+            --text-tertiary: #777;
             --grid-color: rgba(34,197,94,0.025);
         }
 
@@ -180,7 +186,6 @@
             font-size: 3.2rem; font-weight: 700; letter-spacing: -0.04em;
             line-height: 1.08; margin-bottom: 1.5rem;
             opacity: 0; animation: fadeUp 0.5s ease-out 0.25s forwards;
-            white-space: nowrap;
         }
 
         h1 span { color: var(--accent); }
@@ -502,6 +507,15 @@
         @media (prefers-reduced-motion: reduce) {
             .noise::before { animation: none; }
             .glow-bg { animation: none; }
+            /* Neutralize entrance animations so content isn't stuck at opacity:0 */
+            header, .status-badge, h1, .tagline, .cta-buttons,
+            .features, .feature-panels, footer {
+                opacity: 1 !important;
+                animation: none !important;
+            }
+            /* three.js is gated off under reduced-motion (see script); hide the empty
+               hero column so text takes full width instead of sitting beside a gap */
+            .hero-visual { display: none; }
         }
 
     </style>
@@ -533,12 +547,12 @@
                 <img src="icon.png" alt="IP Camera" class="logo-icon">
                 IP Camera
             </div>
-            <nav class="nav-links">
+            <nav class="nav-links" id="nav-links">
                 <a href="guide/">User Guide</a>
                 <a href="api/">API Docs</a>
                 <a href="privacy/">Privacy</a>
             </nav>
-            <button class="burger" aria-label="Menu">
+            <button class="burger" aria-label="Menu" aria-controls="nav-links" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
         </header>
@@ -585,7 +599,7 @@
         </div>
 
         <section class="features" id="feature-cards">
-            <div class="feature" data-panel="0">
+            <div class="feature" data-panel="0" role="button" tabindex="0" aria-expanded="false" aria-controls="panel-0">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>
@@ -595,7 +609,7 @@
                 <p>Hardware-accelerated encoding with low CPU overhead. WebSocket and MJPEG fallback.</p>
                 <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="feature" data-panel="1">
+            <div class="feature" data-panel="1" role="button" tabindex="0" aria-expanded="false" aria-controls="panel-1">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
@@ -605,7 +619,7 @@
                 <p>RTSP for any player. MQTT for smart home. REST API for everything else.</p>
                 <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="feature" data-panel="2">
+            <div class="feature" data-panel="2" role="button" tabindex="0" aria-expanded="false" aria-controls="panel-2">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/>
@@ -616,7 +630,7 @@
                 <p>On-device motion and sound detection. Logs events, charts history, fires MQTT.</p>
                 <svg class="feature-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
-            <div class="feature" data-panel="3">
+            <div class="feature" data-panel="3" role="button" tabindex="0" aria-expanded="false" aria-controls="panel-3">
                 <div class="feature-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -635,7 +649,7 @@
                 <div class="feature-panel-inner">
                     <div class="feature-panel-content">
                         <div class="panel-image">
-                            <img src="fg-01-repurpose.png" alt="Turn your old phone into an IP camera" loading="lazy">
+                            <img src="fg-01-repurpose.webp" alt="Turn your old phone into an IP camera" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -645,7 +659,7 @@
                 <div class="feature-panel-inner">
                     <div class="feature-panel-content">
                         <div class="panel-image">
-                            <img src="fg-02-integrations.png" alt="Works with everything — RTSP, MQTT, REST API" loading="lazy">
+                            <img src="fg-02-integrations.webp" alt="Works with everything — RTSP, MQTT, REST API" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -655,7 +669,7 @@
                 <div class="feature-panel-inner">
                     <div class="feature-panel-content">
                         <div class="panel-image">
-                            <img src="fg-03-detection.png" alt="Home monitoring visualized with AI detection" loading="lazy">
+                            <img src="fg-03-detection.webp" alt="Home monitoring visualized with AI detection" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -665,7 +679,7 @@
                 <div class="feature-panel-inner">
                     <div class="feature-panel-content">
                         <div class="panel-image">
-                            <img src="fg-04-privacy.png" alt="No cloud, no subscriptions, privacy first" loading="lazy">
+                            <img src="fg-04-privacy.webp" alt="No cloud, no subscriptions, privacy first" loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -717,7 +731,6 @@
             </div>
         </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
     // ─── Release Stage Config ────────────────────────────────────────────────────
     // Change RELEASE_STAGE to control the testing banner:
@@ -743,14 +756,6 @@
       document.getElementById('testing-banner-msg').textContent = cfg.msg;
       const bannerBtn = document.getElementById('testing-banner-btn');
       bannerBtn.textContent = cfg.btn;
-
-      if (cfg.external) {
-        // Direct Play Store opt-in link \u2014 no mailto, no modal.
-        bannerBtn.href = cfg.href;
-        bannerBtn.target = '_blank';
-        bannerBtn.rel = 'noopener';
-        return;
-      }
 
       // Modal setup (mailto fallback flow)
       const backdrop = document.getElementById('testing-modal-backdrop');
@@ -785,6 +790,23 @@
     // ─────────────────────────────────────────────────────────────────────────────
 
     (function() {
+
+    // ── three.js phone: load + init only on desktop with motion allowed ──
+    function wantsPhone() {
+      return window.matchMedia('(min-width:721px)').matches &&
+             !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    let phoneInjected = false;
+    function maybeInitPhone() {
+      if (phoneInjected || !wantsPhone()) return;
+      phoneInjected = true;  // set before creating the tag: a resize mid-download can't double-inject
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onload = initPhone;
+      document.head.appendChild(s);
+    }
+
+    function initPhone() {
     // ── Canvas setup ───────────────────────────────────────────────
     const canvas = document.getElementById('phone-canvas');
     function getSize() {
@@ -1087,26 +1109,43 @@
       camera.updateProjectionMatrix();
       renderer.setSize(W2, H2);
     });
+    } // end initPhone
+
+    // Kick off the phone (guarded); re-check when the viewport crosses 721px.
+    maybeInitPhone();
+    window.matchMedia('(min-width:721px)').addEventListener('change', maybeInitPhone);
 
     // ── Accordion ─────────────────────────────────────────────────
     let activePanel = null;
+    function toggleCard(card) {
+      const idx = card.getAttribute('data-panel');
+      const panel = document.getElementById('panel-' + idx);
+      if (activePanel === idx) {
+        panel.classList.remove('open');
+        card.classList.remove('active');
+        card.setAttribute('aria-expanded', 'false');
+        activePanel = null;
+      } else {
+        if (activePanel !== null) {
+          document.getElementById('panel-' + activePanel).classList.remove('open');
+          const prev = document.querySelector('.feature[data-panel="' + activePanel + '"]');
+          prev.classList.remove('active');
+          prev.setAttribute('aria-expanded', 'false');
+        }
+        panel.classList.add('open');
+        card.classList.add('active');
+        card.setAttribute('aria-expanded', 'true');
+        activePanel = idx;
+        setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+      }
+    }
     document.querySelectorAll('.feature').forEach(card => {
-      card.addEventListener('click', () => {
-        const idx = card.getAttribute('data-panel');
-        const panel = document.getElementById('panel-' + idx);
-        if (activePanel === idx) {
-          panel.classList.remove('open');
-          card.classList.remove('active');
-          activePanel = null;
-        } else {
-          if (activePanel !== null) {
-            document.getElementById('panel-' + activePanel).classList.remove('open');
-            document.querySelector('.feature[data-panel="' + activePanel + '"]').classList.remove('active');
-          }
-          panel.classList.add('open');
-          card.classList.add('active');
-          activePanel = idx;
-          setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+      card.addEventListener('click', () => toggleCard(card));
+      // role="button" divs don't fire click from the keyboard — handle Enter/Space
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          toggleCard(card);
         }
       });
     });
@@ -1163,14 +1202,16 @@
     const burger = document.querySelector('.burger');
     const navLinks = document.querySelector('.nav-links');
     burger.addEventListener('click', () => {
-        burger.classList.toggle('open');
+        const open = burger.classList.toggle('open');
         navLinks.classList.toggle('open');
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
     // Close menu when clicking a link
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             burger.classList.remove('open');
             navLinks.classList.remove('open');
+            burger.setAttribute('aria-expanded', 'false');
         });
     });
     })();

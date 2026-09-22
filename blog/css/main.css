@@ -1,0 +1,354 @@
+@layer tokens, base, header, entries, prose, footer, responsive;
+
+@layer tokens {
+	/* Every colour is a light-dark() pair resolved by the element's
+	color-scheme: the OS preference by default, a stored choice via
+	data-theme, and always dark inside the hero (see hero.css). */
+	:root {
+		color-scheme: light dark;
+
+		--color-bg: light-dark(#f5f5f5, #121212);
+		--color-surface: light-dark(#ffffff, #1c1c1c);
+		--color-text: light-dark(#161616, #ececec);
+		--color-muted: light-dark(#4d4d4d, #a8a8a8);
+		--color-border: light-dark(#cfcfcf, #2e2e2e);
+		--color-accent: light-dark(#1a7359, #93b8a9);
+		--color-wash-1: light-dark(#ecf1e6, #2a332c);
+		--color-wash-2: light-dark(#f1f1f1, #2e2e2e);
+		--color-wash-3: light-dark(#e0e8ed, #22303a);
+
+		/* The two semantic graphic colours diagrams draw with (X vs O,
+		set P vs set Q); everything else in a diagram reuses the tokens
+		above. Non-text contrast (3:1) on bg and surface is tested. */
+		--color-diagram-x: light-dark(#0c7485, #54d4e8);
+		--color-diagram-o: light-dark(#b85a08, #ffad66);
+
+		--content-width: 68rem;
+		--prose-width: 65ch;
+
+		--font-ui:
+			-apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+			"Helvetica Neue", Arial, sans-serif;
+		--font-reading: Georgia, "Times New Roman", serif;
+		--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+
+	:root[data-theme="light"] {
+		color-scheme: light;
+	}
+
+	:root[data-theme="dark"] {
+		color-scheme: dark;
+	}
+}
+
+@layer base {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	/* Full-height column so the footer sits at the bottom of the viewport
+	on short pages instead of wherever the content happens to end. */
+	body {
+		display: flex;
+		flex-direction: column;
+		min-height: 100svh;
+		margin: 0;
+		background: var(--color-bg);
+		color: var(--color-text);
+		font-family: var(--font-ui);
+		line-height: 1.6;
+	}
+
+	main {
+		flex: 1;
+	}
+
+	.wrap {
+		width: min(calc(100% - 2 * clamp(1rem, 4vw, 2.5rem)), var(--content-width));
+		margin-inline: auto;
+	}
+
+	a {
+		color: var(--color-accent);
+		text-underline-offset: 0.15em;
+	}
+
+	a:hover {
+		text-decoration-thickness: 2px;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 3px;
+	}
+
+	/* Off-canvas until a keyboard user tabs to it, then pinned top-left
+	above the header. */
+	.skip-link {
+		position: absolute;
+		top: 0.5rem;
+		left: 0.5rem;
+		z-index: 10;
+		padding: 0.5rem 0.9rem;
+		border-radius: 0.5rem;
+		background: var(--color-surface);
+		color: var(--color-text);
+		transform: translateY(-200%);
+	}
+
+	.skip-link:focus-visible {
+		transform: none;
+	}
+}
+
+@layer entries {
+	.recent {
+		padding-block: clamp(3rem, 7svh, 5rem);
+	}
+
+	.recent + .recent {
+		padding-block-start: 0;
+	}
+
+	.index-page {
+		padding-block: clamp(2rem, 5svh, 3.5rem);
+	}
+
+	.recent h2,
+	.wrap > h1 {
+		margin: 0 0 0.5rem;
+		font-family: var(--font-reading);
+		font-weight: 400;
+		font-size: clamp(1.5rem, 1.3rem + 1vw, 1.9rem);
+	}
+
+	.index-count {
+		margin: 0 0 1.5rem;
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		letter-spacing: 0.035em;
+	}
+
+	.more-link {
+		margin: 1.5rem 0 0;
+		text-align: right;
+	}
+
+	.card-grid {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+
+	.card-grid > li {
+		display: flex;
+		min-width: 0;
+	}
+
+	.card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		width: 100%;
+		overflow: clip;
+		border: 1px solid var(--color-border);
+		border-radius: 0.75rem;
+		background: var(--color-surface);
+		transition:
+			transform 160ms ease,
+			border-color 160ms ease,
+			box-shadow 160ms ease;
+	}
+
+	.card:hover {
+		transform: translateY(-2px);
+		border-color: var(--color-muted);
+		box-shadow: 0 12px 32px rgb(0 0 0 / 0.08);
+	}
+
+	.card:has(.card-title a:focus-visible) {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 3px;
+	}
+
+	.card-media {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--color-wash-1);
+	}
+
+	.card-media img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* Preview-only: drafts are never built for the published site. */
+	.card-draft {
+		border-style: dashed;
+	}
+
+	.draft-badge {
+		position: absolute;
+		top: 0.6rem;
+		left: 0.6rem;
+		z-index: 1;
+		padding: 0.15rem 0.6rem;
+		border: 1px solid var(--color-accent);
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--color-surface) 85%, transparent);
+		backdrop-filter: blur(4px);
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-size: 0.7rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.card-body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		flex: 1;
+		padding: 1.25rem 1.25rem 1.1rem;
+	}
+
+	.card-title {
+		margin: 0;
+		font-family: var(--font-reading);
+		font-weight: 400;
+		font-size: 1.35rem;
+		line-height: 1.3;
+		min-height: 2.6em;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.card-title a {
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.card-title a:hover {
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.card-title a::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+	}
+
+	.entry-desc {
+		margin: 0;
+		min-height: 3.2em;
+		color: var(--color-muted);
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.entry-meta {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin: 0;
+		padding-top: 0.75rem;
+		color: var(--color-muted);
+		font-size: 0.8rem;
+		letter-spacing: 0.035em;
+	}
+
+	.entry-topics {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+
+	.entry-topics a,
+	.entry-topics span {
+		position: relative;
+		z-index: 1;
+		border: 1px solid var(--color-border);
+		border-radius: 999px;
+		padding: 0.1rem 0.6rem;
+		color: var(--color-muted);
+		text-decoration: none;
+		font-size: 0.75rem;
+	}
+
+	.entry-topics a:hover {
+		color: var(--color-text);
+		border-color: var(--color-muted);
+	}
+}
+
+@layer footer {
+	.site-footer {
+		border-top: 1px solid var(--color-border);
+		color: var(--color-muted);
+		font-size: 0.9rem;
+	}
+
+	.footer-inner {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 0.5rem 1.5rem;
+		padding-block: 1.5rem 2rem;
+	}
+
+	.site-footer p {
+		margin: 0;
+	}
+
+	.footer-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: var(--color-muted);
+		text-decoration: none;
+	}
+
+	.footer-icon {
+		width: 1.1rem;
+		height: 1.1rem;
+	}
+
+	.footer-link:hover {
+		color: var(--color-text);
+		text-decoration: underline;
+	}
+}
+
+@layer responsive {
+	@media (min-width: 42rem) {
+		.card-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.card {
+			transition: none;
+		}
+
+		.card:hover {
+			transform: none;
+			box-shadow: none;
+		}
+	}
+}

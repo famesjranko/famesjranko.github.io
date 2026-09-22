@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/blog/favicon.svg">
+<link rel="alternate" type="application/rss+xml" title="Andrew J. McDonald" href="/blog/rss.xml">
+<title>A Connect-4 Heuristic in Common Lisp</title>
+<meta name="description" content="A heuristic evaluation function for Connect-4, written in Common Lisp for a minimax search with alpha-beta pruning.">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}</script>
+<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/blog/css/header.css">
+<link rel="stylesheet" href="/blog/css/prose.css">
+<link rel="stylesheet" href="/blog/css/figures.css">
+<link rel="stylesheet" href="/blog/css/project.css">
+<link rel="stylesheet" href="/blog/css/diagrams.css">
+<script src="/blog/js/theme.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap header-inner"><a class="site-name" href="/blog/">Andrew J. McDonald</a><div class="header-actions"><nav class="desktop-nav" aria-label="Primary"><a href="/blog/essays/">Essays</a><a href="/blog/projects/">Projects</a></nav><button class="theme-toggle" type="button" data-theme-toggle aria-label="Dark theme"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button><button class="menu-toggle" type="button" popovertarget="mobile-nav" aria-label="Open navigation"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></button><nav id="mobile-nav" popover aria-label="Mobile"><a href="/blog/essays/">Essays</a><a href="/blog/projects/">Projects</a></nav></div></div></header>
+<main id="main"><div class="wrap"><article class="prose project">
+<header class="project-header">
+<p class="project-eyebrow">University project</p>
+<h1>A Connect-4 Heuristic in Common Lisp</h1>
+<p class="project-lede">A heuristic evaluation function for Connect-4, written in Common Lisp for a minimax search with alpha-beta pruning.</p>
+</header>
+<div class="project-grid"><aside class="project-side" aria-label="Project facts"><dl class="project-facts"><div class="project-fact"><dt>Stack</dt><dd><span class="entry-topics"><span>common-lisp</span><span>minimax</span><span>alpha-beta-pruning</span></span></dd></div><div class="project-fact"><dt>Code</dt><dd><a href="https://github.com/famesjranko/Connect4-Heuristic-Player">Repository</a></dd></div></dl></aside><div class="project-main"><p><picture><source type="image/webp" srcset="/blog/img/projects/connect4-heuristic/cover.webp"><img src="/blog/img/projects/connect4-heuristic/cover.jpg" alt="connect four" width="1600" height="900"></picture></p>
+<p>In 2018, as part of an Artificial Intelligence subject at university, I developed a heuristic evaluation function for Connect-4 written in Common Lisp. The supplied implementation returned <code>0</code> for every board state, so the task was to write a <code>static</code> function that could evaluate the board when minimax reached its search depth.</p>
+<p>I approached this heuristic in two main ways. The first was to evaluate possible winning lines based on the current board state and whether they could be played immediately or built towards a future win. The second was to implement a strategy value map, which overlays a relative value for each position on the board. I then weighted the heuristic towards defensive play.</p>
+<h2>Evaluating a Board</h2>
+<p>The <code>static</code> function gives terminal board states fixed values: <code>50000</code> for a win, <code>-50000</code> for a loss and <code>0</code> for a draw. It passes all other board states to the <code>heuristic</code> function.</p>
+<pre><code class="language-lisp">(defun static (board player)
+  (cond ((won? board player) 50000)
+        ((won? board (opposite player)) -50000)
+        ((drawn? board) 0)
+        (t (heuristic board player))))
+</code></pre>
+<p><code>won?</code> and <code>drawn?</code> are supplied functions that test the board state, while <code>opposite</code> returns the other player.</p>
+<p>For an unfinished board, the heuristic calculates the tactical and positional values for both players, then subtracts the opponent’s value from the player’s value.</p>
+<pre><code class="language-text">unfinished board
+       ↓
+possible winning lines + board-position maps
+       ↓
+tactical value + positional value
+       ↓
+evaluate player and opponent
+       ↓
+player score - opponent score
+</code></pre>
+<h2>Evaluating Possible Wins</h2>
+<p>The first part of the heuristic evaluates possible wins. The supplied code included a global variable named <code>*all-c4-lines*</code>, which contains the 69 groups of four positions that can form a horizontal, vertical or diagonal win.</p>
+<pre><code class="language-text">horizontal        vertical          diagonal
+
+· · · · · · ·    · · · X · · ·    · · · X · · ·
+· · · · · · ·    · · · X · · ·    · · X · · · ·
+· · · · · · ·    · · · X · · ·    · X · · · · ·
+X X X X · · ·    · · · X · · ·    X · · · · · ·
+</code></pre>
+<p>Each group is stored as four <code>(column row)</code> coordinates. The <code>board-value</code> helper function passes each one to <code>line-score</code>, then adds the returned values together.</p>
+<pre><code class="language-lisp">(defun board-value (board player playable)
+  (loop for line in *all-c4-lines*
+        sum (line-score board player line playable)))
+</code></pre>
+<p>I used the <code>line-score</code> helper function to evaluate how far each group had progressed towards a possible win. It returns a numerical value after counting the player’s pieces, checking whether the other player has blocked the line, and checking whether one of its open positions can be played on the next move.</p>
+<p>An open position is not necessarily playable because a piece must fall to the lowest available row. The <code>playable-positions</code> helper function stores the next blank row in each column, or the Lisp value <code>nil</code> when the column has no available row. The heuristic calculates this once, then uses the result when evaluating the board for both players.</p>
+<pre><code class="language-lisp">(defun playable-positions (board)
+  (let ((pp (make-array 7)))
+    (dotimes (col 7 pp)
+      (setf (svref pp col)
+            (get-next-blank board col)))))
+</code></pre>
+<p>The <code>imminent-threat?</code> helper function returns true when a position in the line can be played on the next move. I use the same check for both players. For the opponent, a playable three-in-a-row is an imminent threat: it receives <code>97</code> and is subtracted from the player’s evaluation. For the player, the same check identifies an immediately playable win.</p>
+<pre><code class="language-text">each of the 69 lines, for the player and opponent
+                         │
+                         ├── contains the other player's piece → 0
+                         │
+                         └── unblocked
+                               ├── 3 pieces + playable now    → 97
+                               ├── 3 pieces + future position →  9
+                               ├── 2 pieces + playable now    →  3
+                               └── all other lines            →  0
+
+playable now = imminent-threat?
+
+player's line values   → added to the evaluation
+opponent's line values → subtracted from the evaluation
+</code></pre>
+<p>A playable three-in-a-row receives <code>97</code>, while an unsupported three-in-a-row receives <code>9</code>. I found that weighting current moves over future moves was effective, but it was also important to consider possible future wins as this allowed the heuristic to plan ahead, both defensively and offensively.</p>
+<h2>Positional Strategy</h2>
+<p>The second part of the heuristic was a 7 × 6 strategy value map, which overlays a relative value for each position on the board. Given Connect-4 is a solved game, it is known under perfect play that the opening position affects the outcome. With that in mind, I gave the board positions starting values to improve the heuristic’s game-playing ability, with the highest values placed in the centre column.</p>
+<pre><code class="language-text">1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+1 1 1 3 1 1 1
+1 1 1 3 1 1 1
+1 2 2 3 2 2 1
+</code></pre>
+<p>Each occupied position contributes its corresponding value to the player’s strategy score.</p>
+<p>In addition, I implemented a second strategy based on diagonal positioning. The board is divided into alternating <code>A</code> and <code>B</code> positions, with positions of the same type forming diagonals.</p>
+<pre><code class="language-text">A B A B A B A
+B A B A B A B
+A B A B A B A
+B A B A B A B
+A B A B A B A
+B A B A B A B
+</code></pre>
+<p>The <code>best-strategy?</code> helper function returns a numerical score by counting the player’s pieces on each set. A result above <code>3</code> selects the global <code>*strategy-a*</code> map, a result below <code>-3</code> selects <code>*strategy-b*</code>, and all other results use the global <code>*default-board-values*</code> map. The <code>strategy</code> helper function applies that selection:</p>
+<pre><code class="language-lisp">(defun strategy (board player)
+  (let ((bs (best-strategy? board player)))
+    (cond ((&gt; bs 3)
+           (preferred-positions board player *strategy-a*))
+          ((&lt; bs -3)
+           (preferred-positions board player *strategy-b*))
+          (t
+           (preferred-positions board player
+                                *default-board-values*)))))
+</code></pre>
+<pre><code class="language-text">best-strategy? score
+        │
+        ├── above 3  → strategy A
+        ├── below -3 → strategy B
+        └── otherwise → default map
+                │
+                ▼
+sum the selected map values beneath the player's pieces
+</code></pre>
+<p>The <code>preferred-positions</code> helper function performs this final sum.</p>
+<p>The idea was to add weight to future possible diagonal win states based on the current board. As I noted in the original assignment, this required further testing to determine how effective it was and whether other strategy types could improve game play.</p>
+<h2>Defensive Weighting</h2>
+<p>Lastly, I weighted the heuristic towards defensive rather than offensive play. I approached this by playing at a search depth of one and adjusting the weight until the heuristic chose to defend from a loss rather than pursue an unwinnable win. Once I had this set, I incrementally reduced the value until I found the lowest factor that produced the desired defensive play without weakening its offensive play. The resulting value, <code>1.91000008</code>, is stored in the global variable <code>*defensive-weight*</code>. The <code>heuristic</code> function combines the tactical and positional values as follows:</p>
+<pre><code class="language-lisp">(defun heuristic (board player)
+  (let ((playable (playable-positions board)))
+    (- (+ (* *defensive-weight*
+             (board-value board player playable))
+          (strategy board player))
+       (+ (board-value board (opposite player) playable)
+          (strategy board (opposite player))))))
+</code></pre>
+<p>Together, the complete evaluation is:</p>
+<pre><code class="language-text">board + player
+      │
+      ├── player has won   →  50000
+      ├── opponent has won → -50000
+      ├── drawn board      →      0
+      │
+      └── unfinished board
+              │
+              ▼
+       find the next playable row in each column
+              │
+              ▼
+       tactical value + positional value
+              │
+              ▼
+       evaluate player and opponent
+              │
+              ▼
+player score   = (1.91000008 × tactical value) + positional value
+opponent score = tactical value + positional value
+              │
+              ▼
+heuristic value = player score - opponent score
+</code></pre>
+<h2>Final Game Play Testing Results</h2>
+<p>I played two games at each search depth from one through four and was unable to best the heuristic in any of them. The final board from one game at each depth is shown below.</p>
+<div class="diagram-pair"><figure><svg xmlns="http://www.w3.org/2000/svg" class="diagram diagram-board" viewBox="0 0 760 820" role="img" aria-labelledby="svg-d2877ffb-title-depth-1 svg-d2877ffb-desc-depth-1" width="760" height="820">
+  <title id="svg-d2877ffb-title-depth-1">Connect Four search depth 1</title>
+  <desc id="svg-d2877ffb-desc-depth-1">A seven-column, six-row Connect Four position. The winning O sequence spans 4 pieces and is marked by a line through their centres.</desc>
+  <defs>
+    <filter id="svg-d2877ffb-soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <clipPath id="svg-d2877ffb-board-clip-1"><rect x="44" y="80" width="672" height="576" rx="22"/></clipPath>
+  </defs>
+  <text class="copy heading" x="44" y="42">Final position:</text>
+  <rect class="frame" x="44" y="80" width="672" height="576" rx="22"/>
+  <path class="grid" d="M 140 94 V 642"/>
+  <path class="grid" d="M 236 94 V 642"/>
+  <path class="grid" d="M 332 94 V 642"/>
+  <path class="grid" d="M 428 94 V 642"/>
+  <path class="grid" d="M 524 94 V 642"/>
+  <path class="grid" d="M 620 94 V 642"/>
+  <path class="grid" d="M 58 176 H 702"/>
+  <path class="grid" d="M 58 272 H 702"/>
+  <path class="grid" d="M 58 368 H 702"/>
+  <path class="grid" d="M 58 464 H 702"/>
+  <path class="grid" d="M 58 560 H 702"/>
+  <g clip-path="url(#svg-d2877ffb-board-clip-1)">
+    <circle class="o" cx="92" cy="128" r="30"/>
+    <path class="x" d="M 166 106 L 210 150 M 210 106 L 166 150"/>
+    <circle class="o" cx="284" cy="128" r="30"/>
+    <circle class="o" cx="380" cy="128" r="30"/>
+    <path class="x" d="M 454 106 L 498 150 M 498 106 L 454 150"/>
+    <circle class="o" cx="572" cy="128" r="30"/>
+    <circle class="o" cx="668" cy="128" r="30"/>
+    <path class="x" d="M 70 202 L 114 246 M 114 202 L 70 246"/>
+    <circle class="o" cx="188" cy="224" r="30"/>
+    <path class="x" d="M 262 202 L 306 246 M 306 202 L 262 246"/>
+    <circle class="o" cx="380" cy="224" r="30"/>
+    <path class="x" d="M 454 202 L 498 246 M 498 202 L 454 246"/>
+    <path class="x" d="M 550 202 L 594 246 M 594 202 L 550 246"/>
+    <path class="x" d="M 646 202 L 690 246 M 690 202 L 646 246"/>
+    <circle class="o" cx="92" cy="320" r="30"/>
+    <circle class="o" cx="188" cy="320" r="30"/>
+    <circle class="o" cx="284" cy="320" r="30"/>
+    <path class="x" d="M 358 298 L 402 342 M 402 298 L 358 342"/>
+    <circle class="o" cx="476" cy="320" r="30"/>
+    <circle class="o" cx="572" cy="320" r="30"/>
+    <circle class="o" cx="668" cy="320" r="30"/>
+    <path class="x" d="M 70 394 L 114 438 M 114 394 L 70 438"/>
+    <path class="x" d="M 166 394 L 210 438 M 210 394 L 166 438"/>
+    <path class="x" d="M 262 394 L 306 438 M 306 394 L 262 438"/>
+    <circle class="o" cx="380" cy="416" r="30"/>
+    <circle class="o" cx="476" cy="416" r="30"/>
+    <path class="x" d="M 550 394 L 594 438 M 594 394 L 550 438"/>
+    <path class="x" d="M 646 394 L 690 438 M 690 394 L 646 438"/>
+    <path class="x" d="M 70 490 L 114 534 M 114 490 L 70 534"/>
+    <circle class="o" cx="188" cy="512" r="30"/>
+    <path class="x" d="M 262 490 L 306 534 M 306 490 L 262 534"/>
+    <circle class="o" cx="380" cy="512" r="30"/>
+    <path class="x" d="M 454 490 L 498 534 M 498 490 L 454 534"/>
+    <circle class="o" cx="572" cy="512" r="30"/>
+    <circle class="o" cx="668" cy="512" r="30"/>
+    <path class="x" d="M 70 586 L 114 630 M 114 586 L 70 630"/>
+    <circle class="o" cx="188" cy="608" r="30"/>
+    <path class="x" d="M 262 586 L 306 630 M 306 586 L 262 630"/>
+    <path class="x" d="M 358 586 L 402 630 M 402 586 L 358 630"/>
+    <path class="x" d="M 454 586 L 498 630 M 498 586 L 454 630"/>
+    <path class="x" d="M 550 586 L 594 630 M 594 586 L 550 630"/>
+    <path class="x" d="M 646 586 L 690 630 M 690 586 L 646 630"/>
+    <path class="win-glow" filter="url(#svg-d2877ffb-soft-glow)" d="M 70.79 106.79 L 401.21 437.21"/>
+    <path class="win-line" d="M 70.79 106.79 L 401.21 437.21"/>
+  </g>
+  <text class="copy columns" x="92" y="694">0</text>
+  <text class="copy columns" x="188" y="694">1</text>
+  <text class="copy columns" x="284" y="694">2</text>
+  <text class="copy columns" x="380" y="694">3</text>
+  <text class="copy columns" x="476" y="694">4</text>
+  <text class="copy columns" x="572" y="694">5</text>
+  <text class="copy columns" x="668" y="694">6</text>
+  <text class="copy result" x="44" y="754">I win.</text>
+  <text class="copy score" x="44" y="790">121</text>
+</svg><figcaption>Search depth 1 (heuristic win, 121 nodes)</figcaption></figure> <figure><svg xmlns="http://www.w3.org/2000/svg" class="diagram diagram-board" viewBox="0 0 760 820" role="img" aria-labelledby="svg-a9a64895-title-depth-2 svg-a9a64895-desc-depth-2" width="760" height="820">
+  <title id="svg-a9a64895-title-depth-2">Connect Four search depth 2</title>
+  <desc id="svg-a9a64895-desc-depth-2">A seven-column, six-row Connect Four position. The winning O sequence spans 4 pieces and is marked by a line through their centres.</desc>
+  <defs>
+    <filter id="svg-a9a64895-soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <clipPath id="svg-a9a64895-board-clip-2"><rect x="44" y="80" width="672" height="576" rx="22"/></clipPath>
+  </defs>
+  <text class="copy heading" x="44" y="42">Final position:</text>
+  <rect class="frame" x="44" y="80" width="672" height="576" rx="22"/>
+  <path class="grid" d="M 140 94 V 642"/>
+  <path class="grid" d="M 236 94 V 642"/>
+  <path class="grid" d="M 332 94 V 642"/>
+  <path class="grid" d="M 428 94 V 642"/>
+  <path class="grid" d="M 524 94 V 642"/>
+  <path class="grid" d="M 620 94 V 642"/>
+  <path class="grid" d="M 58 176 H 702"/>
+  <path class="grid" d="M 58 272 H 702"/>
+  <path class="grid" d="M 58 368 H 702"/>
+  <path class="grid" d="M 58 464 H 702"/>
+  <path class="grid" d="M 58 560 H 702"/>
+  <g clip-path="url(#svg-a9a64895-board-clip-2)">
+    <circle class="o" cx="92" cy="128" r="30"/>
+    <path class="x" d="M 166 106 L 210 150 M 210 106 L 166 150"/>
+    <circle class="o" cx="380" cy="128" r="30"/>
+    <path class="x" d="M 550 106 L 594 150 M 594 106 L 550 150"/>
+    <circle class="o" cx="668" cy="128" r="30"/>
+    <path class="x" d="M 70 202 L 114 246 M 114 202 L 70 246"/>
+    <path class="x" d="M 166 202 L 210 246 M 210 202 L 166 246"/>
+    <circle class="o" cx="380" cy="224" r="30"/>
+    <circle class="o" cx="572" cy="224" r="30"/>
+    <circle class="o" cx="668" cy="224" r="30"/>
+    <path class="x" d="M 70 298 L 114 342 M 114 298 L 70 342"/>
+    <path class="x" d="M 166 298 L 210 342 M 210 298 L 166 342"/>
+    <path class="x" d="M 358 298 L 402 342 M 402 298 L 358 342"/>
+    <path class="x" d="M 550 298 L 594 342 M 594 298 L 550 342"/>
+    <path class="x" d="M 646 298 L 690 342 M 690 298 L 646 342"/>
+    <circle class="o" cx="92" cy="416" r="30"/>
+    <circle class="o" cx="188" cy="416" r="30"/>
+    <circle class="o" cx="380" cy="416" r="30"/>
+    <circle class="o" cx="476" cy="416" r="30"/>
+    <circle class="o" cx="572" cy="416" r="30"/>
+    <circle class="o" cx="668" cy="416" r="30"/>
+    <circle class="o" cx="92" cy="512" r="30"/>
+    <path class="x" d="M 166 490 L 210 534 M 210 490 L 166 534"/>
+    <circle class="o" cx="380" cy="512" r="30"/>
+    <path class="x" d="M 454 490 L 498 534 M 498 490 L 454 534"/>
+    <path class="x" d="M 550 490 L 594 534 M 594 490 L 550 534"/>
+    <path class="x" d="M 646 490 L 690 534 M 690 490 L 646 534"/>
+    <path class="x" d="M 70 586 L 114 630 M 114 586 L 70 630"/>
+    <circle class="o" cx="188" cy="608" r="30"/>
+    <path class="x" d="M 262 586 L 306 630 M 306 586 L 262 630"/>
+    <path class="x" d="M 358 586 L 402 630 M 402 586 L 358 630"/>
+    <path class="x" d="M 454 586 L 498 630 M 498 586 L 454 630"/>
+    <circle class="o" cx="572" cy="608" r="30"/>
+    <path class="x" d="M 646 586 L 690 630 M 690 586 L 646 630"/>
+    <path class="win-glow" filter="url(#svg-a9a64895-soft-glow)" d="M 350 416 L 698 416"/>
+    <path class="win-line" d="M 350 416 L 698 416"/>
+  </g>
+  <text class="copy columns" x="92" y="694">0</text>
+  <text class="copy columns" x="188" y="694">1</text>
+  <text class="copy columns" x="284" y="694">2</text>
+  <text class="copy columns" x="380" y="694">3</text>
+  <text class="copy columns" x="476" y="694">4</text>
+  <text class="copy columns" x="572" y="694">5</text>
+  <text class="copy columns" x="668" y="694">6</text>
+  <text class="copy result" x="44" y="754">I win.</text>
+  <text class="copy score" x="44" y="790">438</text>
+</svg><figcaption>Search depth 2 (heuristic win, 438 nodes)</figcaption></figure></div><div class="diagram-pair"><figure><svg xmlns="http://www.w3.org/2000/svg" class="diagram diagram-board" viewBox="0 0 760 820" role="img" aria-labelledby="svg-94217598-title-depth-3 svg-94217598-desc-depth-3" width="760" height="820">
+  <title id="svg-94217598-title-depth-3">Connect Four search depth 3</title>
+  <desc id="svg-94217598-desc-depth-3">A seven-column, six-row Connect Four position. The winning O sequence spans 5 pieces and is marked by a line through their centres.</desc>
+  <defs>
+    <filter id="svg-94217598-soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <clipPath id="svg-94217598-board-clip-3"><rect x="44" y="80" width="672" height="576" rx="22"/></clipPath>
+  </defs>
+  <text class="copy heading" x="44" y="42">Final position:</text>
+  <rect class="frame" x="44" y="80" width="672" height="576" rx="22"/>
+  <path class="grid" d="M 140 94 V 642"/>
+  <path class="grid" d="M 236 94 V 642"/>
+  <path class="grid" d="M 332 94 V 642"/>
+  <path class="grid" d="M 428 94 V 642"/>
+  <path class="grid" d="M 524 94 V 642"/>
+  <path class="grid" d="M 620 94 V 642"/>
+  <path class="grid" d="M 58 176 H 702"/>
+  <path class="grid" d="M 58 272 H 702"/>
+  <path class="grid" d="M 58 368 H 702"/>
+  <path class="grid" d="M 58 464 H 702"/>
+  <path class="grid" d="M 58 560 H 702"/>
+  <g clip-path="url(#svg-94217598-board-clip-3)">
+    <circle class="o" cx="92" cy="128" r="30"/>
+    <circle class="o" cx="188" cy="128" r="30"/>
+    <circle class="o" cx="284" cy="128" r="30"/>
+    <path class="x" d="M 358 106 L 402 150 M 402 106 L 358 150"/>
+    <circle class="o" cx="572" cy="128" r="30"/>
+    <circle class="o" cx="668" cy="128" r="30"/>
+    <path class="x" d="M 70 202 L 114 246 M 114 202 L 70 246"/>
+    <path class="x" d="M 166 202 L 210 246 M 210 202 L 166 246"/>
+    <path class="x" d="M 262 202 L 306 246 M 306 202 L 262 246"/>
+    <circle class="o" cx="380" cy="224" r="30"/>
+    <path class="x" d="M 550 202 L 594 246 M 594 202 L 550 246"/>
+    <path class="x" d="M 646 202 L 690 246 M 690 202 L 646 246"/>
+    <circle class="o" cx="92" cy="320" r="30"/>
+    <circle class="o" cx="188" cy="320" r="30"/>
+    <path class="x" d="M 262 298 L 306 342 M 306 298 L 262 342"/>
+    <circle class="o" cx="380" cy="320" r="30"/>
+    <circle class="o" cx="476" cy="320" r="30"/>
+    <path class="x" d="M 550 298 L 594 342 M 594 298 L 550 342"/>
+    <path class="x" d="M 646 298 L 690 342 M 690 298 L 646 342"/>
+    <path class="x" d="M 70 394 L 114 438 M 114 394 L 70 438"/>
+    <path class="x" d="M 166 394 L 210 438 M 210 394 L 166 438"/>
+    <circle class="o" cx="284" cy="416" r="30"/>
+    <path class="x" d="M 358 394 L 402 438 M 402 394 L 358 438"/>
+    <path class="x" d="M 454 394 L 498 438 M 498 394 L 454 438"/>
+    <circle class="o" cx="572" cy="416" r="30"/>
+    <circle class="o" cx="668" cy="416" r="30"/>
+    <circle class="o" cx="92" cy="512" r="30"/>
+    <circle class="o" cx="188" cy="512" r="30"/>
+    <path class="x" d="M 262 490 L 306 534 M 306 490 L 262 534"/>
+    <circle class="o" cx="380" cy="512" r="30"/>
+    <circle class="o" cx="476" cy="512" r="30"/>
+    <path class="x" d="M 550 490 L 594 534 M 594 490 L 550 534"/>
+    <circle class="o" cx="668" cy="512" r="30"/>
+    <path class="x" d="M 70 586 L 114 630 M 114 586 L 70 630"/>
+    <path class="x" d="M 166 586 L 210 630 M 210 586 L 166 630"/>
+    <circle class="o" cx="284" cy="608" r="30"/>
+    <path class="x" d="M 358 586 L 402 630 M 402 586 L 358 630"/>
+    <path class="x" d="M 454 586 L 498 630 M 498 586 L 454 630"/>
+    <path class="x" d="M 550 586 L 594 630 M 594 586 L 550 630"/>
+    <circle class="o" cx="668" cy="608" r="30"/>
+    <path class="win-glow" filter="url(#svg-94217598-soft-glow)" d="M 262.79 106.79 L 689.21 533.21"/>
+    <path class="win-line" d="M 262.79 106.79 L 689.21 533.21"/>
+  </g>
+  <text class="copy columns" x="92" y="694">0</text>
+  <text class="copy columns" x="188" y="694">1</text>
+  <text class="copy columns" x="284" y="694">2</text>
+  <text class="copy columns" x="380" y="694">3</text>
+  <text class="copy columns" x="476" y="694">4</text>
+  <text class="copy columns" x="572" y="694">5</text>
+  <text class="copy columns" x="668" y="694">6</text>
+  <text class="copy result" x="44" y="754">I win.</text>
+  <text class="copy score" x="44" y="790">1775</text>
+</svg><figcaption>Search depth 3 (heuristic win, 1775 nodes)</figcaption></figure> <figure><svg xmlns="http://www.w3.org/2000/svg" class="diagram diagram-board" viewBox="0 0 760 820" role="img" aria-labelledby="svg-a45dba28-title-depth-4 svg-a45dba28-desc-depth-4" width="760" height="820">
+  <title id="svg-a45dba28-title-depth-4">Connect Four search depth 4</title>
+  <desc id="svg-a45dba28-desc-depth-4">A seven-column, six-row Connect Four position. The winning O sequence spans 4 pieces and is marked by a line through their centres.</desc>
+  <defs>
+    <filter id="svg-a45dba28-soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <clipPath id="svg-a45dba28-board-clip-4"><rect x="44" y="80" width="672" height="576" rx="22"/></clipPath>
+  </defs>
+  <text class="copy heading" x="44" y="42">Final position:</text>
+  <rect class="frame" x="44" y="80" width="672" height="576" rx="22"/>
+  <path class="grid" d="M 140 94 V 642"/>
+  <path class="grid" d="M 236 94 V 642"/>
+  <path class="grid" d="M 332 94 V 642"/>
+  <path class="grid" d="M 428 94 V 642"/>
+  <path class="grid" d="M 524 94 V 642"/>
+  <path class="grid" d="M 620 94 V 642"/>
+  <path class="grid" d="M 58 176 H 702"/>
+  <path class="grid" d="M 58 272 H 702"/>
+  <path class="grid" d="M 58 368 H 702"/>
+  <path class="grid" d="M 58 464 H 702"/>
+  <path class="grid" d="M 58 560 H 702"/>
+  <g clip-path="url(#svg-a45dba28-board-clip-4)">
+    <circle class="o" cx="476" cy="224" r="30"/>
+    <path class="x" d="M 262 298 L 306 342 M 306 298 L 262 342"/>
+    <circle class="o" cx="380" cy="320" r="30"/>
+    <circle class="o" cx="476" cy="320" r="30"/>
+    <path class="x" d="M 166 394 L 210 438 M 210 394 L 166 438"/>
+    <circle class="o" cx="284" cy="416" r="30"/>
+    <circle class="o" cx="380" cy="416" r="30"/>
+    <path class="x" d="M 454 394 L 498 438 M 498 394 L 454 438"/>
+    <circle class="o" cx="188" cy="512" r="30"/>
+    <path class="x" d="M 262 490 L 306 534 M 306 490 L 262 534"/>
+    <path class="x" d="M 358 490 L 402 534 M 402 490 L 358 534"/>
+    <circle class="o" cx="476" cy="512" r="30"/>
+    <path class="x" d="M 70 586 L 114 630 M 114 586 L 70 630"/>
+    <circle class="o" cx="188" cy="608" r="30"/>
+    <path class="x" d="M 262 586 L 306 630 M 306 586 L 262 630"/>
+    <path class="x" d="M 358 586 L 402 630 M 402 586 L 358 630"/>
+    <path class="x" d="M 454 586 L 498 630 M 498 586 L 454 630"/>
+    <circle class="o" cx="572" cy="608" r="30"/>
+    <path class="win-glow" filter="url(#svg-a45dba28-soft-glow)" d="M 497.21 202.79 L 166.79 533.21"/>
+    <path class="win-line" d="M 497.21 202.79 L 166.79 533.21"/>
+  </g>
+  <text class="copy columns" x="92" y="694">0</text>
+  <text class="copy columns" x="188" y="694">1</text>
+  <text class="copy columns" x="284" y="694">2</text>
+  <text class="copy columns" x="380" y="694">3</text>
+  <text class="copy columns" x="476" y="694">4</text>
+  <text class="copy columns" x="572" y="694">5</text>
+  <text class="copy columns" x="668" y="694">6</text>
+  <text class="copy result" x="44" y="754">I win.</text>
+  <text class="copy score" x="44" y="790">6038</text>
+</svg><figcaption>Search depth 4 (heuristic win, 6038 nodes)</figcaption></figure></div><p>Finally, a caveat. While I am not the most accomplished Connect-4 player, I did find myself improving through testing the heuristic. I eventually felt that I had reached the limit of my playing ability. The heuristic played about as well as, or better than, I could at each search depth, including depth one. With further testing of the weight factors and a better player to compare against, I feel the heuristic could be further improved.</p>
+<p><a href="/blog/projects/connect4-lisp-web/">See this heuristic rebuilt as a web interface →</a></p>
+</div></div>
+</article></div></main>
+<footer class="site-footer"><div class="wrap footer-inner"><p>Andrew J. McDonald &middot; &copy; 2026</p><p><a class="footer-link" href="https://github.com/famesjranko" rel="me noopener" target="_blank"><svg class="footer-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a></p></div></footer>
+</body>
+</html>

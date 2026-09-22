@@ -1,0 +1,117 @@
+/* Diagrams: inline SVGs tagged class="diagram" carry geometry and
+semantic classes only; every colour is a site token, so they follow the
+theme toggle. Generic roles first, then per-drawing semantics. Figure sizing
+is supplied separately by figures.css. */
+@layer prose {
+	.prose .diagram .heading,
+	.prose .diagram .label,
+	.prose .diagram .result {
+		fill: var(--color-text);
+	}
+
+	.prose .diagram .muted,
+	.prose .diagram .columns,
+	.prose .diagram .score {
+		fill: var(--color-muted);
+	}
+
+	.prose .diagram .grid {
+		fill: none;
+		stroke: var(--color-muted);
+		stroke-width: 1.5;
+		opacity: 0.4;
+	}
+
+	.prose .diagram .frame {
+		fill: none;
+		stroke: var(--color-muted);
+		stroke-width: 2.5;
+	}
+
+	.prose .diagram .copy {
+		font-family: var(--font-mono);
+	}
+
+	/* Boards display at roughly a third of their 760px viewBox inside a
+	diagram pair, so type is set large enough to survive that scale. */
+	.prose .diagram-board .heading {
+		font-size: 40px;
+		font-weight: 600;
+		letter-spacing: 0.3px;
+	}
+
+	.prose .diagram-board .columns {
+		font-size: 28px;
+		text-anchor: middle;
+	}
+
+	.prose .diagram-board .result {
+		font-size: 34px;
+		font-weight: 600;
+	}
+
+	.prose .diagram-board .score {
+		font-size: 26px;
+	}
+
+	.prose .diagram-board .x,
+	.prose .diagram-board .o {
+		fill: none;
+		stroke-width: 7;
+	}
+
+	.prose .diagram-board .x {
+		stroke: var(--color-diagram-x);
+		stroke-linecap: round;
+	}
+
+	.prose .diagram-board .o {
+		stroke: var(--color-diagram-o);
+	}
+
+	.prose .diagram-board .win-glow,
+	.prose .diagram-board .win-line {
+		fill: none;
+		stroke: var(--color-text);
+		stroke-linecap: round;
+	}
+
+	.prose .diagram-board .win-glow {
+		stroke-width: 14;
+		opacity: 0.16;
+	}
+
+	.prose .diagram-board .win-line {
+		stroke-width: 5.5;
+	}
+
+	.prose .diagram-euler .set-q,
+	.prose .diagram-euler .set-p {
+		fill: none;
+		stroke-width: 4;
+	}
+
+	.prose .diagram-euler .set-q {
+		stroke: var(--color-diagram-x);
+	}
+
+	.prose .diagram-euler .set-p {
+		stroke: var(--color-diagram-o);
+	}
+
+	.prose .diagram-euler .label {
+		font-family: var(--font-reading);
+		font-weight: 600;
+	}
+
+	.prose .diagram-euler .label-q {
+		font-size: 34px;
+		font-style: italic;
+	}
+
+	.prose .diagram-euler .label-p {
+		font-size: 28px;
+		text-anchor: middle;
+		dominant-baseline: middle;
+	}
+}

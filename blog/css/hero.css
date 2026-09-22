@@ -1,0 +1,198 @@
+@layer hero, hero-mobile, motion;
+
+@layer hero {
+	/* The hero is always dark, whatever the page theme: every token
+	inside it resolves to its dark value and the field paints at full
+	strength. */
+	.hero {
+		color-scheme: dark;
+		position: relative;
+		overflow: clip;
+		background: var(--color-bg);
+		color: var(--color-text);
+		display: grid;
+		align-items: center;
+		min-height: 88svh;
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	/* The hero takes whatever height main has left, so a page with nothing
+	after it (the error pages) shows no ground before the footer on tall
+	viewports. With content below, there is nothing left and this is inert. */
+	main:has(> .hero) {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.hero {
+		flex: 1;
+	}
+
+	.hero-inner {
+		position: relative;
+		padding-block: clamp(4rem, 10svh, 7rem);
+	}
+
+	.hero-inner h1 {
+		max-width: 26ch;
+		margin: 0 0 1.25rem;
+		font-family: var(--font-reading);
+		font-weight: 400;
+		font-size: clamp(2.4rem, 1.4rem + 4.5vw, 4.2rem);
+		line-height: 1.08;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+
+	.hero-eyebrow {
+		margin: 0 0 1rem;
+		color: var(--color-muted);
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+	}
+
+	.hero-standfirst {
+		max-width: 46ch;
+		margin: 0 0 2rem;
+		color: var(--color-muted);
+		font-size: clamp(1.05rem, 1rem + 0.4vw, 1.25rem);
+		line-height: 1.6;
+	}
+
+	.hero-cta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin: 0;
+	}
+
+	.hero-cta a {
+		display: inline-block;
+		padding: 0.7rem 1.4rem;
+		border: 1px solid var(--color-text);
+		border-radius: 999px;
+		color: var(--color-text);
+		text-decoration: none;
+	}
+
+	.hero-cta a:hover {
+		background: var(--color-text);
+		color: var(--color-bg);
+		text-decoration: none;
+	}
+
+	/* Abstract atmospheric field. Static gradients alone must look
+	intentional; JS only nudges --px/--py, CSS animates the drift. */
+	.hero-visual {
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(60% 50% at 78% 18%, var(--color-wash-2), transparent 70%),
+			radial-gradient(55% 55% at 12% 82%, var(--color-wash-1), transparent 70%),
+			radial-gradient(70% 60% at 55% 55%, var(--color-wash-3), transparent 75%);
+		opacity: 0.75;
+	}
+
+	.hero-visual span {
+		position: absolute;
+		width: 46vmax;
+		height: 46vmax;
+		border-radius: 50%;
+		filter: blur(60px);
+		opacity: 0.55;
+		translate: calc(var(--px, 0) * 26px) calc(var(--py, 0) * 20px);
+		transition: translate 1.2s ease-out;
+		animation: drift 36s ease-in-out infinite alternate;
+	}
+
+	.hero-visual span:nth-child(1) {
+		left: -10vmax;
+		top: -12vmax;
+		background: radial-gradient(circle, var(--color-wash-1), transparent 65%);
+	}
+
+	.hero-visual span:nth-child(2) {
+		right: -12vmax;
+		top: 8svh;
+		background: radial-gradient(circle, var(--color-wash-2), transparent 65%);
+		animation-delay: -12s;
+		animation-duration: 44s;
+	}
+
+	.hero-visual span:nth-child(3) {
+		left: 22%;
+		bottom: -18vmax;
+		background: radial-gradient(circle, var(--color-wash-3), transparent 65%);
+		animation-delay: -24s;
+		animation-duration: 52s;
+	}
+
+	/* WebGL thought field. Paints beneath the headline, above the wash
+	fallback; pointer-events stay with the text. When JS/WebGL/motion is
+	unavailable the canvas is empty and the washes stand alone. */
+	.hero-canvas {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		pointer-events: none;
+		opacity: 1;
+	}
+
+	@keyframes drift {
+		from {
+			transform: translate3d(-3%, -2%, 0) scale(1);
+		}
+		to {
+			transform: translate3d(3%, 4%, 0) scale(1.08);
+		}
+	}
+}
+
+@layer hero-mobile {
+	@media (max-width: 42rem) {
+		.hero {
+			min-height: 78svh;
+		}
+
+		.hero-inner {
+			padding-block: clamp(3rem, 8svh, 5rem);
+		}
+
+		.hero-inner h1 {
+			max-width: 14ch;
+			font-size: clamp(2rem, 10vw, 3rem);
+		}
+
+		.hero-visual span {
+			width: 34rem;
+			height: 34rem;
+			filter: blur(45px);
+		}
+
+		.hero-visual span:nth-child(1) {
+			left: -14rem;
+			top: -12rem;
+		}
+
+		.hero-visual span:nth-child(2) {
+			right: -16rem;
+			top: 4svh;
+		}
+
+		.hero-visual span:nth-child(3) {
+			left: 8%;
+			bottom: -20rem;
+		}
+	}
+}
+
+@layer motion {
+	@media (prefers-reduced-motion: reduce) {
+		.hero-visual span {
+			animation: none;
+			transition: none;
+		}
+	}
+}

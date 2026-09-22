@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram diagram-euler" viewBox="116 36 376 376" role="img" aria-labelledby="title desc">
+  <title id="title">P entails Q: equivalence under conjunction</title>
+  <desc id="desc">A smaller orange region labelled P equals P and Q sits entirely inside a larger cyan region labelled Q.</desc>
+
+  <circle class="set-q" cx="304" cy="224" r="164"/>
+  <circle class="set-p" cx="344" cy="252" r="108"/>
+
+  <text class="label label-q" x="205" y="145">Q</text>
+  <text class="label label-p" x="344" y="252">P = P ∧ Q</text>
+</svg>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/blog/favicon.svg">
+<link rel="alternate" type="application/rss+xml" title="Andrew J. McDonald" href="/blog/rss.xml">
+<title>A Connect-4 Web Interface in Common Lisp</title>
+<meta name="description" content="My university Connect-4 heuristic taken out of the REPL and put behind a Common Lisp web service, with a per-column view of its scores.">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}</script>
+<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/blog/css/header.css">
+<link rel="stylesheet" href="/blog/css/prose.css">
+<link rel="stylesheet" href="/blog/css/figures.css">
+<link rel="stylesheet" href="/blog/css/project.css">
+<link rel="stylesheet" href="/blog/css/diagrams.css">
+<script src="/blog/js/theme.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap header-inner"><a class="site-name" href="/blog/">Andrew J. McDonald</a><div class="header-actions"><nav class="desktop-nav" aria-label="Primary"><a href="/blog/essays/">Essays</a><a href="/blog/projects/">Projects</a></nav><button class="theme-toggle" type="button" data-theme-toggle aria-label="Dark theme"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button><button class="menu-toggle" type="button" popovertarget="mobile-nav" aria-label="Open navigation"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></button><nav id="mobile-nav" popover aria-label="Mobile"><a href="/blog/essays/">Essays</a><a href="/blog/projects/">Projects</a></nav></div></div></header>
+<main id="main"><div class="wrap"><article class="prose project">
+<header class="project-header">
+<p class="project-eyebrow">Personal project</p>
+<h1>A Connect-4 Web Interface in Common Lisp</h1>
+<p class="project-lede">My university Connect-4 heuristic taken out of the REPL and put behind a Common Lisp web service, with a per-column view of its scores.</p>
+</header>
+<div class="project-grid"><aside class="project-side" aria-label="Project facts"><dl class="project-facts"><div class="project-fact"><dt>Stack</dt><dd><span class="entry-topics"><span>common-lisp</span><span>sbcl</span><span>hunchentoot</span><span>redis</span><span>docker</span><span>javascript</span></span></dd></div><div class="project-fact"><dt>Code</dt><dd><a href="https://github.com/famesjranko/Connect4-Lisp-Web">Repository</a></dd></div><div class="project-fact"><dt>Lineage</dt><dd><span class="project-predecessor">Extended from <a href="/blog/projects/connect4-heuristic/">connect4-heuristic</a>.</span></dd></div></dl></aside><div class="project-main"><p><picture><source type="image/webp" srcset="/blog/img/projects/connect4-lisp-web/cover.webp"><img src="/blog/img/projects/connect4-lisp-web/cover.jpg" alt="Connect-4 on a retro home computer" width="1536" height="1024"></picture></p>
+<p>In 2018 I wrote a <a href="/blog/projects/connect4-heuristic/">heuristic evaluation function for Connect-4</a> in Common Lisp for an Artificial Intelligence subject at university. It only ran in a REPL: load three source files, call <code>play</code>, type a column number at each prompt. I was proud of it and wanted something more user friendly than a terminal, and I wanted the technical challenge of doing that with Lisp tooling rather than porting the game to something else. So the server is SBCL running Hunchentoot, state is kept in Redis through cl-redis, and the search is parallelised with lparallel. The heuristic adapts the 2018 implementation.</p>
+<h2>What stayed the same</h2>
+<p><code>heuristic.lisp</code> still carries its September 2018 header. The line values are unchanged, 97 for a playable three, 9 for a three that needs a future position, 3 for a playable two; so are the strategy maps and the defensive weight of <code>1.91000008</code>. The implementation now reads a board array with <code>aref</code>, calculates playable positions once per evaluation, and uses loops over the board and its possible winning lines in place of the original list traversals.</p>
+<h2>Playing it</h2>
+<p>The interface is HTML, CSS and JavaScript with no framework. The game logic is one <code>game-client.js</code> file and eight theme pages wrap different layouts around it. You can play with mouse or keyboard and choose who moves first. The interface offers search depths from one to eight, but the server caps the depth at six by default unless configured otherwise. The four winning positions are highlighted when a game ends.</p>
+<p>The part I find most satisfying is the debug view. For every move the server searches each of the seven columns separately at the game’s depth and returns a score per column. At depth one these are exactly what the 2018 <code>heuristic</code> function returns for that move. The panel shows the seven scores, marks the column the AI chose, and flags whether the move came from an immediate win or block rather than the search. Being able to see the heuristic value of each available move while playing is what I wanted from this; it is also how you notice when the AI prefers a move you would not have.</p>
+<figure><picture><source type="image/webp" srcset="/blog/img/projects/connect4-lisp-web/connect4-debug-scores.webp"><img src="/blog/img/projects/connect4-lisp-web/connect4-debug-scores.jpg" alt="Mid-game with the debug panel open" width="1600" height="868"></picture><figcaption>The debug panel showing a score for each column and the move the AI chose.</figcaption></figure>
+<h2>Handling a move</h2>
+<p>Each browser gets a token when it starts a game. The board, turn, status, search depth and move count are stored in Redis against that token. On a move, the browser sends its token and a column; the server loads the game, checks the move is legal, applies it, runs the AI, saves the new state and returns the board with the AI’s reply.</p>
+<p>I chose this over letting the browser hold the board because minimax is expensive at depth. If the client supplied the position, anyone could post arbitrary boards and request searches for as long as they liked. With the server owning the board, a search can only run on the board of a game that already exists. There is also a cap on games open at once. A Lua script inside Redis clears expired tokens, checks the count against the cap and claims a slot as one atomic operation. Open tabs send a heartbeat every thirty seconds to renew the key’s expiry; the browser enforces a thirty minute inactivity timeout and, on tab close, uses <code>sendBeacon</code> to give the slot back. Requests are rate limited per IP.</p>
+<h2>Updating the search</h2>
+<p>The board moved from nested lists to a 7 × 6 array, and the move, win-detection and evaluation functions were rewritten against it.</p>
+<p>I added a transposition table to the minimax. The same board can be reached by different move orders, and without a table the search evaluates it each time. Each board has a Zobrist hash and its result is kept in a fixed-size table, reused if the position turns up again at a sufficient depth. The table is bound per request, and per worker thread in the parallel search, so nothing is shared between games.</p>
+<p>For depth four and above the root moves are searched through a worker pool. The centre column is searched first on its own to set an alpha-beta bound; the remaining columns are searched in parallel against it. Below depth four the sequential search is used as is. Before choosing a move, the server checks for an immediate win and an immediate block, and plays it if found.</p>
+<h2>Running it</h2>
+<p>The application runs in an SBCL container as a non-root user, with Redis as a second service under Docker Compose. Depth, worker count, the game cap, the timeouts and the rate limit are environment variables, so <code>docker compose up</code> is enough to play it.</p>
+<p>Lastly, the heuristic did not get any better here, and I did not set out to make it better. What I have now is a game someone can run from the linked repository, with the numbers behind each of its moves on screen while they play.</p>
+<p><a href="https://github.com/famesjranko/Connect4-Lisp-Web" target="_blank" rel="noopener noreferrer">View Connect4-Lisp-Web on GitHub →</a></p>
+</div></div>
+</article></div></main>
+<footer class="site-footer"><div class="wrap footer-inner"><p>Andrew J. McDonald &middot; &copy; 2026</p><p><a class="footer-link" href="https://github.com/famesjranko" rel="me noopener" target="_blank"><svg class="footer-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a></p></div></footer>
+</body>
+</html>

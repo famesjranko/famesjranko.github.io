@@ -1,0 +1,91 @@
+@layer prose {
+	.prose.project {
+		max-width: none;
+	}
+
+	.project-header {
+		max-width: var(--prose-width);
+	}
+
+	.project-eyebrow {
+		margin: 0 0 0.9rem;
+		color: var(--color-muted);
+		font-family: var(--font-ui);
+		font-size: 0.82rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.project-lede {
+		font-size: 1.05rem;
+	}
+
+	.project-eyebrow .draft-eyebrow {
+		margin: 0 0.5rem 0 0;
+	}
+
+	.project-grid {
+		display: grid;
+		gap: 2rem;
+	}
+
+	.project-side {
+		display: grid;
+		gap: 0.7rem;
+		align-content: start;
+		border-top: 1px solid var(--color-border);
+		padding-top: 1rem;
+		font-family: var(--font-ui);
+		font-size: 0.88rem;
+	}
+
+	.project-facts {
+		margin: 0;
+		display: grid;
+		gap: 0.7rem;
+	}
+
+	.project-fact {
+		display: grid;
+		gap: 0.3rem;
+	}
+
+	.project-fact dt {
+		color: var(--color-muted);
+		font-size: 0.76rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.project-fact dd {
+		margin: 0;
+		min-width: 0;
+	}
+
+	.project-main {
+		max-width: var(--prose-width);
+		min-width: 0;
+	}
+
+	@media (min-width: 52rem) {
+		.project-grid {
+			grid-template-columns: minmax(0, 1fr) 15rem;
+		}
+
+		.project-main {
+			grid-column: 1;
+			grid-row: 1;
+		}
+
+		.project-side {
+			grid-column: 2;
+			position: sticky;
+			top: 1.5rem;
+			align-self: start;
+			border-top: 0;
+			border-left: 1px solid var(--color-border);
+			padding-top: 0;
+			padding-left: 1.4rem;
+		}
+	}
+}

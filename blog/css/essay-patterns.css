@@ -1,0 +1,384 @@
+@layer prose {
+	.prose.essay .example-label {
+		margin: 1.5rem 0 0.45rem;
+		color: var(--color-muted);
+		font-family: var(--font-ui);
+		font-size: 0.72em;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.prose.essay .inference-chain,
+	.prose.essay .comparison-list {
+		margin: 0 0 1.75rem;
+	}
+
+	.prose.essay .inference-chain > div,
+	.prose.essay .comparison-list > div {
+		display: grid;
+		grid-template-columns: 2rem minmax(0, 1fr);
+		gap: 0.65rem;
+		align-items: baseline;
+		padding-block: 0.45rem;
+	}
+
+	.prose.essay .inference-chain dt,
+	.prose.essay .comparison-list dt {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 650;
+	}
+
+	.prose.essay .inference-chain dd,
+	.prose.essay .comparison-list dd {
+		margin: 0;
+	}
+
+	.prose.essay .inference-conclusion dt {
+		font-family: var(--font-reading);
+		font-size: 1.05em;
+	}
+
+	.prose.essay .concept-sequence {
+		margin: 1.25rem 0 1.75rem;
+	}
+
+	.prose.essay .sequence-list,
+	.prose.essay .argument-outline {
+		margin: 0 0 1.2rem;
+	}
+
+	.prose.essay .sequence-list > div,
+	.prose.essay .argument-outline > div {
+		display: grid;
+		grid-template-columns: 2rem minmax(0, 1fr);
+		gap: 0.65rem;
+		align-items: baseline;
+		padding-block: 0.45rem;
+	}
+
+	.prose.essay .sequence-list dt,
+	.prose.essay .argument-outline dt {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 650;
+	}
+
+	.prose.essay .sequence-list dd,
+	.prose.essay .argument-outline dd {
+		margin: 0;
+	}
+
+	.prose.essay .concept-sequence .formulation-section + .sequence-list {
+		margin-bottom: 1rem;
+	}
+
+	.prose.essay .concept-comparison {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.5rem;
+		margin: 1.25rem 0 1.9rem;
+	}
+
+	.prose.essay .concept-comparison > div {
+		min-width: 0;
+	}
+
+	.prose.essay .concept-comparison ul {
+		margin: 0;
+		padding-left: 1.2rem;
+	}
+
+	.prose.essay .concept-comparison li {
+		margin-block: 0.35rem;
+	}
+
+	.prose.essay .concept-synthesis {
+		margin: 1.4rem 0 1.9rem;
+	}
+
+	.prose.essay .concept-synthesis dl {
+		margin: 0;
+	}
+
+	.prose.essay .concept-synthesis dt {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 650;
+	}
+
+	.prose.essay .concept-synthesis dd {
+		margin: 0;
+	}
+
+	.prose.essay .synthesis-result {
+		margin: 0.9rem 0 0;
+		padding-top: 0.75rem;
+		border-top: 1px solid var(--color-border);
+		font-style: italic;
+	}
+
+	@media (max-width: 40rem) {
+		.prose.essay .concept-comparison {
+			grid-template-columns: 1fr;
+			gap: 1rem;
+		}
+	}
+
+	.prose.essay .causal-sequence {
+		margin: 0 0 1.75rem;
+	}
+
+	.prose.essay .causal-sequence > div {
+		display: grid;
+		grid-template-columns: 2rem minmax(0, 1fr);
+		gap: 0.65rem;
+		align-items: baseline;
+		padding-block: 0.5rem;
+	}
+
+	.prose.essay .causal-sequence dt {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 650;
+	}
+
+	.prose.essay .causal-sequence dd {
+		margin: 0;
+	}
+
+	.prose.essay .causal-sequence .sequence-question dt {
+		font-family: var(--font-reading);
+		font-size: 1.05em;
+	}
+
+	.prose.essay .causal-sequence .sequence-question dd {
+		font-style: italic;
+	}
+
+	.prose.essay .epigraph {
+		margin: 1.5rem auto 2rem;
+		padding: 0;
+		border-left: 0;
+		max-width: 38rem;
+		text-align: center;
+	}
+
+	.prose.essay .epigraph p {
+		margin-inline: auto;
+	}
+
+	.prose.essay .epigraph .attribution {
+		text-align: right;
+		margin-top: 0.45rem;
+		font-family: var(--font-ui);
+		font-size: 0.82em;
+		font-style: normal;
+		color: var(--color-muted);
+	}
+
+	.prose.essay .analogy-passage {
+		margin: 1.5rem 0 1.75rem;
+		padding-block: 0.9rem;
+		border-top: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.prose.essay .analogy-passage > :first-child {
+		margin-top: 0;
+	}
+
+	.prose.essay .analogy-passage > :last-child {
+		margin-bottom: 0;
+	}
+
+	.prose.essay .mode-passage {
+		margin: 1.4rem 0;
+		padding-block: 0.85rem;
+	}
+
+	.prose.essay .mode-passage + .mode-passage {
+		margin-top: -0.35rem;
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .mode-passage > .formulation-section {
+		margin-bottom: 0.55rem;
+	}
+
+	.prose.essay .mode-passage > :last-child {
+		margin-bottom: 0;
+	}
+
+	.prose.essay .analogy-passage > .formulation-section {
+		margin-bottom: 0.55rem;
+	}
+
+	.prose.essay .logical-formulations {
+		margin-block: 1.5rem 2rem;
+		padding: 0;
+		border-left: 0;
+		font-style: normal;
+	}
+
+	.prose.essay .logical-formulation {
+		padding-block: 0.8rem;
+	}
+
+	.prose.essay .logical-formulation + .logical-formulation {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .logical-formulation > p {
+		margin: 0 0 0.55rem;
+		font-family: var(--font-reading);
+		font-style: normal;
+	}
+
+	.prose.essay .logical-formulation ol {
+		margin: 0;
+		padding-left: 2.2rem;
+	}
+
+	.prose.essay .logical-formulation li {
+		margin-block: 0.22rem;
+		font-style: normal;
+	}
+
+	.prose.essay .logical-formulation li::marker {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 650;
+	}
+
+	.prose.essay > .principles:first-of-type {
+		margin-block: 1rem 1.5rem;
+	}
+
+	.prose.essay > .principles:first-of-type li {
+		margin-block: 0.35rem;
+	}
+
+	.prose.essay .demarcation-line {
+		margin: 1.25rem 0 1.5rem;
+		padding: 0.7rem 0 0.7rem 1rem;
+		border-left: 2px solid var(--color-accent);
+		font-style: italic;
+	}
+
+	.prose.essay .logical-title {
+		display: grid;
+		grid-template-columns: 2rem minmax(0, 1fr);
+		gap: 0.65rem;
+		align-items: baseline;
+	}
+
+	.prose.essay .logical-formulation .logical-title {
+		margin-bottom: 0.4rem;
+		color: var(--color-text);
+		font-weight: 650;
+	}
+
+	.prose.essay .logical-label {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 700;
+	}
+
+	.prose.essay .test-parts {
+		margin: 1.5rem 0 1.9rem;
+	}
+
+	.prose.essay .test-parts > div {
+		padding-block: 0.75rem;
+	}
+
+	.prose.essay .test-parts p:last-child {
+		margin-bottom: 0;
+	}
+
+	.prose.essay .thought-experiment {
+		margin: 1.5rem 0 1.8rem;
+		padding-block: 0.75rem;
+		border-top: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border);
+	}
+
+	.prose.essay .thought-experiment > :first-child {
+		margin-top: 0;
+	}
+
+	.prose.essay .thought-experiment > :last-child {
+		margin-bottom: 0;
+	}
+
+	.prose.essay .participant-label {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 700;
+		font-style: normal;
+	}
+	.prose.essay .approach-list {
+		margin: 1.25rem 0 1.75rem;
+	}
+
+	.prose.essay .approach-list > div {
+		display: grid;
+		grid-template-columns: 2rem minmax(0, 1fr);
+		gap: 0.65rem;
+		align-items: baseline;
+		padding-block: 0.6rem;
+	}
+
+	.prose.essay .approach-list > div + div {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .approach-list > div > span {
+		color: var(--color-accent);
+		font-family: var(--font-ui);
+		font-weight: 650;
+	}
+
+	.prose.essay .approach-list p {
+		margin: 0;
+	}
+
+	.prose.essay .test-parts > div + div {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .causal-sequence > div + div {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .sequence-list > div + div,
+	.prose.essay .argument-outline > div + div {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .inference-chain > div + div,
+	.prose.essay .comparison-list > div + div {
+		border-top: 1px solid var(--color-border);
+	}
+
+	.prose.essay .concept-synthesis dl > div {
+		display: grid;
+		grid-template-columns: 7rem minmax(0, 1fr);
+		gap: 0.75rem;
+		align-items: baseline;
+		padding-block: 0.5rem;
+	}
+
+	@media (max-width: 40rem) {
+		.prose.essay .concept-synthesis dl > div {
+			grid-template-columns: 1fr;
+			gap: 0.2rem;
+		}
+	}
+
+	.prose.essay .concept-synthesis dl > div + div {
+		border-top: 1px solid var(--color-border);
+	}
+}

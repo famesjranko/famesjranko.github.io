@@ -1,0 +1,54 @@
+@layer prose {
+	.prose img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	.prose figure {
+		margin-block: 2rem;
+		text-align: center;
+	}
+
+	.prose figure picture,
+	.prose figure img,
+	.prose figure svg {
+		display: block;
+		max-width: 100%;
+		height: auto;
+		margin-inline: auto;
+	}
+
+	.prose figure figcaption {
+		margin-top: 0.75rem;
+		color: var(--color-muted);
+		text-align: left;
+	}
+
+	.prose .diagram-pair {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.5rem;
+		margin-block: 1.5em;
+	}
+
+	/* Drop the UA's 40px inline figure margin too, or each board loses
+	80px of its column. */
+	.prose .diagram-pair figure {
+		min-width: 0;
+		margin: 0;
+	}
+
+	.prose .diagram-pair figcaption {
+		font-size: 0.8rem;
+	}
+
+	.prose figure:has(.diagram-euler) figcaption {
+		text-align: center;
+	}
+
+	@media (max-width: 40rem) {
+		.prose .diagram-pair {
+			grid-template-columns: 1fr;
+		}
+	}
+}

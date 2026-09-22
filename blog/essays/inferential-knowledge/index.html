@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/blog/favicon.svg">
+<link rel="alternate" type="application/rss+xml" title="Andrew J. McDonald" href="/blog/rss.xml">
+<title>On Evaluating Human-Like AI</title>
+<meta name="description" content="Turing and Searle on why judging AI is a matter of perspective, not definition.">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t}}catch(e){}</script>
+<link rel="stylesheet" href="/blog/css/main.css">
+<link rel="stylesheet" href="/blog/css/header.css">
+<link rel="stylesheet" href="/blog/css/prose.css">
+<link rel="stylesheet" href="/blog/css/figures.css">
+<link rel="stylesheet" href="/blog/css/essay.css">
+<link rel="stylesheet" href="/blog/css/essay-patterns.css">
+<link rel="stylesheet" href="/blog/css/essay-discussion.css">
+<link rel="stylesheet" href="/blog/css/diagrams.css">
+<script src="/blog/js/theme.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header"><div class="wrap header-inner"><a class="site-name" href="/blog/">Andrew J. McDonald</a><div class="header-actions"><nav class="desktop-nav" aria-label="Primary"><a href="/blog/essays/">Essays</a><a href="/blog/projects/">Projects</a></nav><button class="theme-toggle" type="button" data-theme-toggle aria-label="Dark theme"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 2a6 6 0 0 0 0 12z" fill="currentColor"/></svg></button><button class="menu-toggle" type="button" popovertarget="mobile-nav" aria-label="Open navigation"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg></button><nav id="mobile-nav" popover aria-label="Mobile"><a href="/blog/essays/">Essays</a><a href="/blog/projects/">Projects</a></nav></div></div></header>
+<main id="main"><div class="wrap"><article class="prose essay">
+<header>
+<h1>On Evaluating Human-Like AI</h1>
+<p>Turing and Searle on why judging AI is a matter of perspective, not definition.</p>
+</header>
+<p><picture><source type="image/webp" srcset="/blog/img/essays/inferential-knowledge/cover.webp"><img src="/blog/img/essays/inferential-knowledge/cover.jpg" alt="city" width="1600" height="636"></picture></p>
+<p>Drawing on arguments made by Turing and Searle, this paper contends that any evaluation for artificial intelligence is dependent on two observational perspectives, internalist and externalist, and that it is the observational perspective that determines which questions are meaningful and which are not.  Artificial intelligence need only be capable of displaying outwardly the behaviours and qualities that we currently perceive as being uniquely human to be considered human-like.  Not only does the externalistic behaviourist model hold best fit for such an evaluation criteria, it is we, as observers and evaluators, who are really tested.  I will then argue that while it is indeed possible for a computer to display the qualities necessary for being human-like – it is not reliant on any particular capability but rather the system as a whole.</p>
+<p>To answer the question of what an artificially intelligent computer would need to be indistinguishable from a human, we are in large part dependent on the observational viewing point of the evaluator.  Fundamentally, our knowledge of others is limited to what we can observe as it simply isn’t possible to view first-hand the inner workings of another person. While we are able to see and interact with people’s outward behaviour, we can only infer that they have a mind; in essence we don’t know what it’s like to be someone else.  This outsider view is analogous to our limited view of a computers mind; we can observe input and output behaviour, but we are unable to directly experience what it’s like to be a computer.  With this in mind, for a computer to be indistinguishable from a human it merely has to fulfil the same basic criteria that we currently use to evaluate self-awareness and intelligence in other human beings.  Turing (1950) proposed a test called The Imitation Game (TIM) as a potential candidate for this necessary type of evaluation.</p>
+<p>Turing, in his paper, <em>Computing Machinery and Intelligence</em>, asks the question “Can machines think?” and describes a novel two-part test for answering it (Turing 1950, pp. 433–434).</p>
+<div class="method">
+  <div class="method-step">
+    <span class="method-number">1</span>
+    <div>
+      <p>A male <span class="participant-label">A</span> and a female <span class="participant-label">B</span> that are both hidden from view of person <span class="participant-label">C</span>.</p>
+    </div>
+  </div>
+  <div class="method-step">
+    <span class="method-number">2</span>
+    <div>
+      <p>Person <span class="participant-label">C</span> can only communicate to <span class="participant-label">A</span> and <span class="participant-label">B</span> via written exchanges.</p>
+    </div>
+  </div>
+  <div class="method-step">
+    <span class="method-number">3</span>
+    <div>
+      <p>Moreover, <span class="participant-label">C</span> is told in advance that he is communicating with both a male and a female, but not told which is which.</p>
+    </div>
+  </div>
+  <div class="method-step">
+    <span class="method-number">4</span>
+    <div>
+      <p>Based on the information <span class="participant-label">C</span> acquires during the indirect correspondence from <span class="participant-label">A</span> and <span class="participant-label">B</span> he must determine which is male and which is female.</p>
+    </div>
+  </div>
+  <div class="method-step">
+    <span class="method-number">5</span>
+    <div>
+      <p>It is the job of <span class="participant-label">A</span> to trick <span class="participant-label">C</span> into making an error, while <span class="participant-label">B</span> tries to help <span class="participant-label">C</span> into choosing correctly.</p>
+    </div>
+  </div>
+  <div class="method-step">
+    <span class="method-number">6</span>
+    <div>
+      <p>Replace <span class="participant-label">A</span> with a computer and rerun the test.</p>
+    </div>
+  </div>
+</div>
+<p>Turing’s argument is that if we take the results from running part one of the test and then compare it to the results we get in part two and there is no statistically relevant difference between the two data sets, we must assume that the computer is just as intelligent as the human playing <span class="participant-label">A</span>.  Moreover, the Turing test shows how reliant our current evaluative methods are on inferred knowledge.  This is due to being locked within a first-hand perspective, unable to experience the minds of others.  Furthermore, this limiting perspective forces us into an equally limited epistemological position.</p>
+<p>If we accept our current inferential framework for evaluating sentience, from an epistemological position, we are forced to accept that any computer that can create like circumstances – exhibit intelligent behaviour indistinguishably from that of a human – must also be considered sentient.  A similar argument can be made for an animal rights stance predicated on the observed level of intelligence expressed by any given species.  While we can’t necessarily evaluate the first-hand capabilities and experiences of any given species, we can infer qualities and compare them to known quantities, ourselves, to support our ethical stance; qualities such as self-identification, the ability to create and use tools, social complexity, and complex emotional behaviour.  In this sense, any species that shows a certain level of behaviours that are associated with intelligence would be granted relevant rights-to-live based on that inferred intelligence.  This shows that the problem of evaluating intelligence is one of perspective rather than definition.</p>
+<p>Fundamentally, Turing’s test highlights that the issue at hand is of how one should view and evaluate other sentient beings rather than an argument for what sentience <em>is</em>.  It is for this reason that any discussion about the Turing test inevitably fails to fully account for the inner mental workings of a sentient being, as it is trivial from our limited observational perspective.  Ultimately the test highlights how limited we are.  Moreover, that if we accept our current inferential framework for evaluating sentience and intelligence, we are forced to accept that any agent, computer or otherwise, that can create like circumstances – exhibit intelligent qualities – must also be considered sentient.  Otherwise, we have to change how we evaluate such qualities and, or, stop thinking that those qualities are enough to verify sentience.  If we accept that our first person perspective is too limiting and want to find a more resilient method for evaluation, we can attempt to approach the problem from an internalist position.  The question then is: does this approach avoid the fundamental problems raised in Turing’s test?</p>
+<p>Searle (1980) created a thought experiment called ‘The Chinese Room’ (TCR) in his paper <em>Minds, Brains, and Programs</em> in an attempt to answer this question.  TCR is a thought experiment involving a person inside a room set with the task of simulating the computational programming of a computer.</p>
+<div class="thought-experiment">
+  <p class="formulation-section">The Chinese Room</p>
+  <p>The person is given a separate rule-set in English describing how to process incoming Chinese symbols with their appropriate outgoing Chinese symbols, and as he doesn’t speak Chinese, doesn’t understand what the symbols mean.</p>
+  <p>A person who speaks fluent Chinese then passes input cards to the man who pairs them with the appropriate output cards and a second Chinese speaker receives the processed information at the other end.</p>
+</div>
+<p>TCR is a direct challenge to strong-AI by attempting to show that any logical system based on formal computations with symbols cannot produce intelligent thought.</p>
+<p>Searle’s argument is that even though the man is capable of processing meaningful statements with the Chinese symbols, that because he’s only using a rule-set that describes how to pair input data with output data, the person can’t be said to be intelligent as there is no understanding since manipulation of meaningless symbols is all that’s being done.  In essence, that any program capable of exhibiting meaningful intelligence is just blindly processing meaningless input/output data in the same way.  And, worse still, that because the rule-set and the symbols are in different languages they are incommensurable, and thus the program can’t ever know what the symbols mean as there is no means of translating them.  Simply stated “one cannot get semantics (meaning) from syntax (formal symbol manipulation)” (Cole 2014).  There are, however, responses that challenge Searle’s reasoning.</p>
+<p>One example is ‘The Other Minds Reply’ (OMR), which raises the problem that if we accept that the Chinese speakers understand the symbols in a meaningful way – and because we only know this from an externalist outsider view based on their behaviour – we must therefore on those grounds also attribute intelligent understanding, based on its behaviour, to TCR.  Searle’s response to this reply is that “[t]he problem in this discussion is not about how I know that other people have cognitive states, but rather what it is that I am attributing to them when I attribute cognitive states to them…that it couldn’t be just computational processes and their output because the computational processes and their output can exist without the cognitive state” (1980, p. 421).  For this reason an argument can be made for a behaviourist approach to evaluating AI.</p>
+<p>Given the limitations of what we can know internally, both of others and possibly of ourselves, using specific human-like capabilities as our evaluative criteria for human-like intelligence raises more problems than it solves.  Both Turing’s and Searle’s thought experiments show that our intuitive knowledge of other minds is limited, but it is also clear that we observe other people around us daily and attribute intelligence and sentience to them, even experiencing empathy towards them.  We do this by intuitively attributing a causal relationship between our own inner-mind and our outward behaviour; and by inferring a similar relationship in others we can then imagine a similar inner-mind in others from their outward behaviour.  In essence, we are all natural behaviourists.  And because our method for evaluating like-properties needs to be consistent to be meaningful, we therefore need to employ a behaviourist methodology when evaluating AI.  As highlighted in Turing’s test, it is not any particular human capability or quality that is necessarily important, but the AI’s behaviour overall that is important; and, specifically, whether or not our observations lead us to conclude that it is human-like or not.</p>
+<p>In sum, there are many approaches to this problem and, in a Russellian sense, the approach is dependent on the question we’re asking – this is highlighted by Searle’s response to the OMR.  When it comes to the problem of artificial intelligence we can look at from an explanatory position; where the aim is to understand it, predict it, and even replicate it.  However, we can also view it from a practical and ethical position where the question is framed very differently.</p>
+<dl class="comparison-list">
+  <div>
+    <dt>A</dt>
+    <dd><strong>The problem faced by the internalist perspective</strong> is answering how intelligence, and particularly conscious intelligence, comes about.</dd>
+  </div>
+  <div>
+    <dt>B</dt>
+    <dd><strong>Whereas the problem faced by the externalist perspective</strong> is that of how to evaluate and respond to apparent intelligence, artificial or otherwise.</dd>
+  </div>
+</dl>
+<p>The one assumption made by both perspectives is that we do actually have meaningful knowledge and experiences, and aren’t just suffering from a first-hand information problem; where our inner mental self-awareness is merely a function of formal symbol manipulation with the illusion of being uniquely qualitative.  And worse still, we have no internal method for confirming or denying it.  Given this assumption, the best fit method for evaluating potential human-like AI is an intuitive behaviourist methodology.  The real question is not <em>if</em> a particular AI system is human-like, but whether or not we believe that it is human-like.</p>
+<h2>References</h2>
+<div class="references">
+  <p>Cole, D 2014, <a href="http://plato.stanford.edu/entries/chinese-room/" target="_blank" rel="noopener noreferrer">‘The Chinese Room Argument’</a>, <em>The Stanford Encyclopedia of Philosophy</em>, Edward N. Zalta (ed.).</p>
+  <p>Searle, J 1980, ‘Minds, Brains, and Programs’, <em>The Behavioral and Brain Sciences</em>, vol. 3, pp. 417-457</p>
+  <p>Turing, A 1950, ‘Computing Machinery and Intelligence Mind’, <em>New Series</em>, Vol. 59, No. 236, pp. 433-460.</p>
+</div>
+
+</article></div></main>
+<footer class="site-footer"><div class="wrap footer-inner"><p>Andrew J. McDonald &middot; &copy; 2026</p><p><a class="footer-link" href="https://github.com/famesjranko" rel="me noopener" target="_blank"><svg class="footer-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a></p></div></footer>
+</body>
+</html>
